@@ -11,6 +11,10 @@ class CustomerService {
         return custumerDao.getAllCustomers()
     }
 
+    fun getCustomerById(id: Int): Customer{
+        return custumerDao.getCustomerById(id)
+    }
+
     fun addCustomer(customer: Customer){
         custumerDao.addCustomer(customer)
     }
