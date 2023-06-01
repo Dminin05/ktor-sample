@@ -11,6 +11,9 @@ class CustomerDao(){
     fun getAllCustomers(): MutableList<Customer>{
         return customers
     }
+    fun getCustomerById(id: Int): Customer{
+        return customers.first(){it.id == id}
+    }
     fun addCustomer(customer: Customer){
        customers.add(customer)
     }
