@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.models.Cart
 import com.example.services.CustomerService
 import com.example.services.ProductService
 import io.ktor.server.application.*
@@ -14,6 +15,10 @@ val productModule = module{
     single { ProductService() }
 }
 
+val cartModule = module{
+    single { Cart() }
+}
+
 fun Application.configureKoin() = install(Koin) {
-    modules(customerModule, productModule)
+    modules(customerModule, productModule, cartModule)
 }

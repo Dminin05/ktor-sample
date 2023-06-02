@@ -26,6 +26,6 @@ class CustomerDao(){
 
 
 @Serializable
-data class Customer(val id: Int, val name: String, val surname: String) {
+data class Customer(val id: Int, val name: String, val surname: String, val cart: Cart) {
 
 }
