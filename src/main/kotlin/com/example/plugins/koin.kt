@@ -1,7 +1,7 @@
 package com.example.plugins
 
-import com.example.models.ProductDao
 import com.example.services.CustomerService
+import com.example.services.ProductService
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -11,7 +11,7 @@ val customerModule = module{
 }
 
 val productModule = module{
-    single { ProductDao() }
+    single { ProductService() }
 }
 
 fun Application.configureKoin() = install(Koin) {

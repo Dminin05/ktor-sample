@@ -13,23 +13,6 @@ import org.koin.ktor.ext.inject
 fun Routing.configureCustomerRouting() = route("/customers"){
 
     config()
-//    val customerService: CustomerService by inject()
-//    routing {
-//        get{
-//            call.respond(customerService.getAllCustomers())
-//        }
-//        get("/{id}"){
-//            call.respond(customerService.getCustomerById(Integer.parseInt(call.parameters["id"])))
-//        }
-//        post("/customer") {
-//            val customer = call.receive<Customer>()
-//            customerService.addCustomer(customer)
-//            call.respond(HttpStatusCode.OK)
-//        }
-//        delete("/delete/{id}"){
-//            customerService.deleteCustomer(Integer.parseInt(call.parameters["id"]))
-//        }
-//    }
 
 }
 
