@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.models.Cart
+import com.example.models.ProductDao
 import com.example.services.CustomerService
 import com.example.services.ProductService
 import io.ktor.server.application.*
@@ -13,6 +14,7 @@ val customerModule = module{
 
 val productModule = module{
     single { ProductService() }
+//    single { ProductDao() }
 }
 
 val cartModule = module{

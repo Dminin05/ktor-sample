@@ -8,6 +8,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import org.koin.ktor.ext.inject
 
 
@@ -26,8 +27,17 @@ private fun Route.config(){
     get("/{id}"){
         call.respond(customerService.getCustomerById(Integer.parseInt(call.parameters["id"])))
     }
-    get("/addProductInCart/{customerId}/{productId}"){
-        call.respond(customerService.getCustomerById(Integer.parseInt(call.parameters["customerId"])).cart.addProductInCart(productService.getProductById(Integer.parseInt(call.parameters["productId"]))))
+    post("/addProductInCart/{customerId}/{productId}"){
+
+        val customerId = call.parameters.getOrFail<Int>("customerId")
+        val productId = call.parameters.getOrFail<Int>("productId")
+
+        val customer = customerService.getCustomerById(customerId)
+        val product = productService.getProductById(productId)
+
+        customer.cart.addProductInCart(product)
+
+        call.respond(HttpStatusCode.NoContent)
     }
     post {
         val customer = call.receive<Customer>()
