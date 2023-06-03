@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.models.Cart
+import com.example.models.CustomerDao
 import com.example.models.ProductDao
 import com.example.services.CustomerService
 import com.example.services.ProductService
@@ -10,11 +11,12 @@ import org.koin.ktor.plugin.Koin
 
 val customerModule = module{
     single { CustomerService() }
+    single { CustomerDao() }
 }
 
 val productModule = module{
     single { ProductService() }
-//    single { ProductDao() }
+    single { ProductDao() }
 }
 
 val cartModule = module{

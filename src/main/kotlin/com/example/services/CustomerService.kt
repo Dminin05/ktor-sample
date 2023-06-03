@@ -2,11 +2,13 @@ package com.example.services
 
 import com.example.models.Customer
 import com.example.models.CustomerDao
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class CustomerService {
+class CustomerService: KoinComponent {
 
-    private val custumerDao = CustomerDao()
+    val custumerDao by inject<CustomerDao>()
 
     fun getAllCustomers(): MutableList<Customer>{
         return custumerDao.getAllCustomers()

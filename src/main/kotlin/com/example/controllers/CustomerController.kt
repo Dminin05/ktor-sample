@@ -19,8 +19,10 @@ fun Routing.configureCustomerRouting() = route("/customers"){
 }
 
 private fun Route.config(){
-    val customerService: CustomerService by inject()
-    val productService: ProductService by inject()
+
+    val customerService by inject<CustomerService>()
+    val productService by inject<ProductService>()
+
     get{
         call.respond(customerService.getAllCustomers())
     }
@@ -47,4 +49,5 @@ private fun Route.config(){
     delete("/{id}"){
         customerService.deleteCustomer(Integer.parseInt(call.parameters["id"]))
     }
+
 }

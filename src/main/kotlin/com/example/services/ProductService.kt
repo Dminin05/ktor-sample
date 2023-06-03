@@ -2,11 +2,12 @@ package com.example.services
 
 import com.example.models.Product
 import com.example.models.ProductDao
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ProductService {
+class ProductService: KoinComponent{
 
-    private val productDao = ProductDao()
-//    val productdao: ProductDao by inject()
+    val productDao by inject<ProductDao>()
 
     fun getAllProducts(): MutableList<Product>{
         return productDao.getAllProducts()
