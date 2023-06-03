@@ -6,6 +6,7 @@ import com.example.models.ProductDao
 class ProductService {
 
     private val productDao = ProductDao()
+//    val productdao: ProductDao by inject()
 
     fun getAllProducts(): MutableList<Product>{
         return productDao.getAllProducts()
