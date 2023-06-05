@@ -1,6 +1,5 @@
 package com.example.controllers
 
-import com.example.models.Customer
 import com.example.services.CustomerService
 import com.example.services.ProductService
 import io.ktor.http.*
@@ -27,27 +26,32 @@ private fun Route.config(){
         call.respond(customerService.getAllCustomers())
     }
     get("/{id}"){
-        call.respond(customerService.getCustomerById(Integer.parseInt(call.parameters["id"])))
+        val id = call.parameters.getOrFail<Int>("id").toInt()
+        val customer = customerService.getCustomerById(id)
+        call.respond(customer!!)
     }
-    post("/addProductInCart/{customerId}/{productId}"){
-
-        val customerId = call.parameters.getOrFail<Int>("customerId")
-        val productId = call.parameters.getOrFail<Int>("productId")
-
-        val customer = customerService.getCustomerById(customerId)
-        val product = productService.getProductById(productId)
-
-        customer.cart.addProductInCart(product)
-
-        call.respond(HttpStatusCode.NoContent)
-    }
+//    post("/addProductInCart/{customerId}/{productId}"){
+//
+//        val customerId = call.parameters.getOrFail<Int>("customerId")
+//        val productId = call.parameters.getOrFail<Int>("productId")
+//
+//        val customer = customerService.getCustomerById(customerId)
+//        val product = productService.getProductById(productId)
+//
+//        customer.cart.addProductInCart(product)
+//
+//        call.respond(HttpStatusCode.NoContent)
+//    }
     post {
-        val customer = call.receive<Customer>()
-        customerService.addCustomer(customer)
+        val param = call.receiveParameters()
+        val name = param.getOrFail("name")
+        val surname = param.getOrFail("surname")
+        customerService.addCustomer(name, surname)
         call.respond(HttpStatusCode.OK)
     }
     delete("/{id}"){
-        customerService.deleteCustomer(Integer.parseInt(call.parameters["id"]))
+        val customerId = call.parameters.getOrFail<Int>("id")
+        customerService.deleteCustomer(customerId)
     }
 
 }

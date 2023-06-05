@@ -1,31 +1,18 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
-
-class CustomerDao(){
-
-    private val customers: MutableList<Customer> = mutableListOf()
-    var id = 1
-
-
-    fun getAllCustomers(): MutableList<Customer>{
-        return customers
-    }
-    fun getCustomerById(id: Int): Customer{
-        return customers.first(){it.id == id}
-    }
-    fun addCustomer(customer: Customer){
-       customers.add(customer)
-    }
-
-    fun deleteCustomer(id: Int){
-       customers.remove(customers.first(){it.id == id})
-    }
-
-}
+import org.jetbrains.exposed.sql.Table
 
 
 @Serializable
-data class Customer(val id: Int, val name: String, val surname: String, var cart: Cart) {
+data class Customer(val id: Int, val name: String, val surname: String) {
 
+}
+
+object Customers : Table() {
+    val id = integer("id").autoIncrement()
+    val name = varchar("name", 128)
+    val surname = varchar("surname", 1024)
+
+    override val primaryKey = PrimaryKey(id)
 }
