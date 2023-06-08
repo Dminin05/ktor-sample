@@ -6,7 +6,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class CustomerService: KoinComponent {
+class CustomerService : KoinComponent {
 
     val custumerDao by inject<ICustomerDao>()
 

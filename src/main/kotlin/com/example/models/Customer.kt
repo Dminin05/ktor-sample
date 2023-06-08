@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 
 
 @Serializable
-data class Customer(val id: Int, val name: String, val surname: String) {
+data class Customer(val id: Int? = null, val name: String, val surname: String) {
 
 }
 

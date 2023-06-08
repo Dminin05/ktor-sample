@@ -20,30 +20,30 @@ class CustomerDao: ICustomerDao {
         Customers.selectAll().map(::resultRowToCustomer)
     }
 
-    override suspend fun customer(id: Int): Customer? {
-        return Customers
+    override suspend fun customer(id: Int): Customer? = dbQuery{
+        Customers
             .select { Customers.id eq id }
             .map(::resultRowToCustomer)
             .singleOrNull()
     }
 
-    override suspend fun addNewCustomer(name: String, surname: String): Customer? {
+    override suspend fun addNewCustomer(name: String, surname: String): Customer? = dbQuery{
         val insertStatement = Customers.insert {
             it[Customers.name] = name
             it[Customers.surname] = surname
         }
-        return insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCustomer)
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCustomer)
     }
 
-    override suspend fun editCustomer(id: Int, name: String, surname: String): Boolean {
-        return Customers.update({ Customers.id eq id }) {
+    override suspend fun editCustomer(id: Int, name: String, surname: String): Boolean = dbQuery{
+        Customers.update({ Customers.id eq id }) {
             it[Customers.name] = name
             it[Customers.surname] = surname
         } > 0
     }
 
-    override suspend fun deleteCustomer(id: Int): Boolean {
-        return Customers.deleteWhere { Customers.id eq id } > 0
+    override suspend fun deleteCustomer(id: Int): Boolean = dbQuery{
+        Customers.deleteWhere { Customers.id eq id } > 0
     }
 
 //    val dao: ICustomerDao = CustomerDao().apply {
