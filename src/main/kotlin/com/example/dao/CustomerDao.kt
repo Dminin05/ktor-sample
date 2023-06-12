@@ -29,6 +29,13 @@ class CustomerDao: ICustomerDao {
             .singleOrNull()
     }
 
+    override suspend fun customerByUsername(username: String): Customer? = dbQuery{
+        Customers
+            .select { Customers.username eq username }
+            .map(::resultRowToCustomer)
+            .singleOrNull()
+    }
+
     override suspend fun addNewCustomer(
         name: String,
         surname: String,

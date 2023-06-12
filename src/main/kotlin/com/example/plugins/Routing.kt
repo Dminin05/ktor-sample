@@ -9,6 +9,7 @@ fun Application.configureRouting() = routing {
 
     configureCustomerRouting()
     configureProductRouting()
+    configureAuthRouting()
 
 
 }
