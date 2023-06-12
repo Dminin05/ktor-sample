@@ -24,6 +24,7 @@ val cartModule = module{
     single { Cart() }
 }
 
+
 fun Application.configureKoin() = install(Koin) {
     modules(customerModule, productModule, cartModule)
 }

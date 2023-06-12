@@ -14,6 +14,8 @@ class CustomerDao: ICustomerDao {
         id = row[Customers.id],
         name = row[Customers.name],
         surname = row[Customers.surname],
+        username = row[Customers.username],
+        password = row[Customers.password],
     )
 
     override suspend fun allCustomers(): List<Customer> = dbQuery {
@@ -27,19 +29,32 @@ class CustomerDao: ICustomerDao {
             .singleOrNull()
     }
 
-    override suspend fun addNewCustomer(name: String, surname: String): Customer? = dbQuery{
+    override suspend fun addNewCustomer(
+        name: String,
+        surname: String,
+        username: String,
+        password: String): Customer? = dbQuery{
+
         val insertStatement = Customers.insert {
             it[Customers.name] = name
             it[Customers.surname] = surname
+            it[Customers.username] = username
+            it[Customers.password] = password
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCustomer)
+
     }
 
-    override suspend fun editCustomer(id: Int, name: String, surname: String): Boolean = dbQuery{
+    override suspend fun editCustomer(
+        id: Int,
+        name: String,
+        surname: String): Boolean = dbQuery{
+
         Customers.update({ Customers.id eq id }) {
             it[Customers.name] = name
             it[Customers.surname] = surname
         } > 0
+
     }
 
     override suspend fun deleteCustomer(id: Int): Boolean = dbQuery{
