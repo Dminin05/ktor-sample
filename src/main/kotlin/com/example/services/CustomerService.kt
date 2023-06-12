@@ -18,6 +18,10 @@ class CustomerService : KoinComponent {
         return custumerDao.customer(id)
     }
 
+    suspend fun getCustomerByUsername(username: String): Customer? {
+        return custumerDao.customerByUsername(username)
+    }
+
     suspend fun addCustomer(
         name: String,
         surname: String,

@@ -4,6 +4,8 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import com.example.plugins.*
 import com.example.utils.DatabaseFactory
+import com.typesafe.config.ConfigFactory
+import io.ktor.server.config.*
 import io.ktor.server.netty.*
 
 fun main() {
@@ -13,8 +15,10 @@ fun main() {
 
 fun Application.module() {
 
+
     DatabaseFactory.init()
     configureKoin()
+    configureAuth()
     configureRouting()
     configureSerialization()
 
