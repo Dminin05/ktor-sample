@@ -15,7 +15,7 @@ fun Application.configureAuth() {
     val jwtRealm = "Access to 'hello'"
 
     authentication {
-        jwt {
+        jwt("auth") {
             realm = jwtRealm
             verifier(
                 JWT

@@ -13,7 +13,7 @@ object Customers : Table() {
     val id = integer("id").autoIncrement()
     val name = varchar("name", 128)
     val surname = varchar("surname", 1024)
-    val username = varchar("username", 1024)
+    val username = varchar("username", 1024).uniqueIndex()
     val password = varchar("password", 1024)
 
     override val primaryKey = PrimaryKey(id)

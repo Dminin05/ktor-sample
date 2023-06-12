@@ -2,6 +2,9 @@ package com.example.utils
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import java.util.*
 
 fun createToken(username: String): String? {
@@ -14,9 +17,13 @@ fun createToken(username: String): String? {
         .withAudience(jwtAudience)
         .withIssuer(jwtIssuer)
         .withClaim("username", username)
-        .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+        .withExpiresAt(Date(System.currentTimeMillis() + 600000))
         .sign(Algorithm.HMAC256(jwtSecret))
 
     return token
 
+}
+
+fun getUsernameFromToken(principal: JWTPrincipal?): String{
+    return principal!!.payload.getClaim("username").asString()
 }
