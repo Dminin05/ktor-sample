@@ -3,6 +3,7 @@ package com.example
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import com.example.plugins.*
+import com.example.utils.DatabaseFactory
 import io.ktor.server.netty.*
 
 fun main() {
@@ -12,6 +13,7 @@ fun main() {
 
 fun Application.module() {
 
+    DatabaseFactory.init()
     configureKoin()
     configureRouting()
     configureSerialization()

@@ -1,26 +1,34 @@
 package com.example.services
 
+import com.example.dao.ICustomerDao
 import com.example.models.Customer
-import com.example.models.CustomerDao
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class CustomerService {
+class CustomerService : KoinComponent {
 
-    private val custumerDao = CustomerDao()
+    val custumerDao by inject<ICustomerDao>()
 
-    fun getAllCustomers(): MutableList<Customer>{
-        return custumerDao.getAllCustomers()
+    suspend fun getAllCustomers(): List<Customer> {
+        return custumerDao.allCustomers()
     }
 
-    fun getCustomerById(id: Int): Customer{
-        return custumerDao.getCustomerById(id)
+    suspend fun getCustomerById(id: Int): Customer? {
+        return custumerDao.customer(id)
     }
 
-    fun addCustomer(customer: Customer){
-        custumerDao.addCustomer(customer)
+    suspend fun addCustomer(
+        name: String,
+        surname: String,
+        username: String,
+        password: String) {
+
+        custumerDao.addNewCustomer(name, surname, username, password)
+
     }
 
-    fun deleteCustomer(id: Int){
+    suspend fun deleteCustomer(id: Int){
         custumerDao.deleteCustomer(id)
     }
 
