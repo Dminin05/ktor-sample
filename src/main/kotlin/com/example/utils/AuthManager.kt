@@ -24,6 +24,7 @@ fun createToken(username: String): String? {
 
 }
 
-fun getUsernameFromToken(principal: JWTPrincipal?): String{
+fun getUsernameFromToken(call: ApplicationCall): String{
+    val principal = call.principal<JWTPrincipal>()
     return principal!!.payload.getClaim("username").asString()
 }

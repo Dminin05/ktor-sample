@@ -1,15 +1,12 @@
 package com.example.controllers
 
-import com.example.models.Customer
-import com.example.models.LoginRequest
+import com.example.dtos.LoginRequest
 import com.example.services.CustomerService
 import com.example.utils.createToken
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.util.*
 import org.koin.ktor.ext.inject
 
 fun Routing.configureAuthRouting() = route("/auth"){
