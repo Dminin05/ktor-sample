@@ -1,30 +1,19 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.Table
 
-
-class ProductDao(){
-
-    private val products: MutableList<Product> = mutableListOf()
-    var id = 1
-
-
-    fun getAllProducts(): MutableList<Product>{
-        return products
-    }
-    fun getProductById(id: Int): Product{
-        return products.first(){it.id == id}
-    }
-    fun addProduct(product: Product){
-        products.add(product)
-    }
-
-    fun deleteProduct(id: Int){
-        products.remove(products.first(){it.id == id})
-    }
-
-
-
-}
 @Serializable
-data class Product(val id: Int, val title: String, var price: Int)
+data class Product(
+    val id: Int? = null,
+    val title: String,
+    var price: Int
+)
+
+object Products : Table() {
+    val id = integer("id").autoIncrement()
+    val title = varchar("title", 1024)
+    val price = integer("price")
+
+    override val primaryKey = PrimaryKey(id)
+}

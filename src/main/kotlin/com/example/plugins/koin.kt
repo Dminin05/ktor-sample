@@ -2,8 +2,8 @@ package com.example.plugins
 
 import com.example.dao.CustomerDao
 import com.example.dao.ICustomerDao
+import com.example.dao.ProductDao
 import com.example.models.Cart
-import com.example.models.ProductDao
 import com.example.services.CustomerService
 import com.example.services.ProductService
 import io.ktor.server.application.*
