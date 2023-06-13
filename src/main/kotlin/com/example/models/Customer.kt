@@ -1,5 +1,6 @@
 package com.example.models
 
+import com.example.dtos.CartDto
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 
@@ -10,7 +11,8 @@ data class Customer(
     val name: String,
     val surname: String,
     val username: String,
-    val password: String
+    val password: String,
+    var cart: CartDto = CartDto()
 )
 
 object Customers : Table() {

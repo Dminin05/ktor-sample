@@ -1,23 +1,16 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.Table
 
 
 @Serializable
-class Cart(val productsInCart: MutableList<Product>, var totalPrice: Int){
-    constructor():this(mutableListOf<Product>(), 0)
+data class Cart(val id: Int, val username: String, val productId: Int)
 
-    fun addProductInCart(product: Product){
-        productsInCart.add(product)
-    }
+object Carts : Table() {
+    val id = integer("id").autoIncrement()
+    val username = varchar("username", 1024).references(Customers.username)
+    val productId = integer("productId").references(Products.id)
 
-    fun deleteProductFromCart(id: Int){
-        productsInCart.remove(productsInCart.first(){it.id == id})
-    }
-
-    fun recalculate(): Unit{
-        productsInCart.forEach {
-            totalPrice += it.price
-        }
-    }
+    override val primaryKey = PrimaryKey(id)
 }

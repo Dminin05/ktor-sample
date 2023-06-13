@@ -1,6 +1,6 @@
 package com.example.services
 
-import com.example.dao.ProductDao
+import com.example.dao.productDao.ProductDao
 import com.example.models.Product
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

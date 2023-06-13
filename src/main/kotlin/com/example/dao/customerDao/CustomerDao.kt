@@ -1,9 +1,8 @@
-package com.example.dao
+package com.example.dao.customerDao
 
 import com.example.models.Customer
 import com.example.models.Customers
 import com.example.utils.DatabaseFactory.dbQuery
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 

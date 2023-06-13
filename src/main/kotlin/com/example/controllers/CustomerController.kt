@@ -1,6 +1,7 @@
 package com.example.controllers
 
 import com.example.models.Customer
+import com.example.services.CartService
 import com.example.services.CustomerService
 import com.example.services.ProductService
 import com.example.utils.getUsernameFromToken
@@ -25,16 +26,34 @@ private fun Route.config(){
 
     val customerService by inject<CustomerService>()
     val productService by inject<ProductService>()
+    val cartService by inject<CartService>()
 
 
     get{
         call.respond(customerService.getAllCustomers())
     }
+
     authenticate("auth"){
         get("/info"){
             val username = getUsernameFromToken(call)
             val customer = customerService.getCustomerByUsername(username)
             call.respond(customer!!)
+        }
+    }
+
+    authenticate("auth"){
+        get("/cart"){
+            val username = getUsernameFromToken(call)
+            call.respond(cartService.getCart(username))
+        }
+    }
+
+    authenticate("auth"){
+        post("/cart/{productId}"){
+            val username = getUsernameFromToken(call)
+            val productId = call.parameters.getOrFail<Int>("productId")
+            cartService.addProductInCart(username, productId)
+            call.respond(cartService.getCart(username))
         }
     }
 
@@ -45,12 +64,11 @@ private fun Route.config(){
 //        val customerId = call.parameters.getOrFail<Int>("customerId")
 //        val productId = call.parameters.getOrFail<Int>("productId")
 //
-//        val customer = customerService.getCustomerById(customerId)
-//        val product = productService.getProductById(productId)
+//        val customer = customerService.getCustomerById(customerId)!!
 //
-//        customer.cart.addProductInCart(product)
+//        customer.cart.addProductInCart(productId)
 //
-//        call.respond(HttpStatusCode.NoContent)
+//        call.respond(customer)
 //    }
 
     post {

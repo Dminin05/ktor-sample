@@ -15,6 +15,7 @@ object DatabaseFactory {
         transaction(database) {
             SchemaUtils.create(Customers)
             SchemaUtils.create(Products)
+            SchemaUtils.create(Carts)
         }
     }
 
