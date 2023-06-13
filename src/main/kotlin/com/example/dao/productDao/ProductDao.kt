@@ -1,4 +1,4 @@
-package com.example.dao
+package com.example.dao.productDao
 
 import com.example.models.Product
 import com.example.models.Products
@@ -6,7 +6,7 @@ import com.example.utils.DatabaseFactory.dbQuery
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class ProductDao : IProductsDao{
+class ProductDao : IProductsDao {
 
 
     private fun resultRowToProduct(row: ResultRow) = Product(

@@ -1,6 +1,6 @@
 package com.example.services
 
-import com.example.dao.ICustomerDao
+import com.example.dao.customerDao.ICustomerDao
 import com.example.models.Customer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -9,6 +9,7 @@ import org.koin.core.component.inject
 class CustomerService : KoinComponent {
 
     val custumerDao by inject<ICustomerDao>()
+    val cartService by inject<CartService>()
 
     suspend fun getAllCustomers(): List<Customer> {
         return custumerDao.allCustomers()
@@ -19,7 +20,9 @@ class CustomerService : KoinComponent {
     }
 
     suspend fun getCustomerByUsername(username: String): Customer? {
-        return custumerDao.customerByUsername(username)
+        val customer = custumerDao.customerByUsername(username) ?: return null
+        customer.cart = cartService.getCart(username)
+        return customer
     }
 
     suspend fun addCustomer(
