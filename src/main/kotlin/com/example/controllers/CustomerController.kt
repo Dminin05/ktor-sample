@@ -32,8 +32,7 @@ private fun Route.config(){
     }
     authenticate("auth"){
         get("/info"){
-            val principal = call.principal<JWTPrincipal>()
-            val username = getUsernameFromToken(principal)
+            val username = getUsernameFromToken(call)
             val customer = customerService.getCustomerByUsername(username)
             call.respond(customer!!)
         }
