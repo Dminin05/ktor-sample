@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class CustomerDao: ICustomerDao {
+class CustomerDao : ICustomerDao {
 
 
     private fun resultRowToCustomer(row: ResultRow) = Customer(
@@ -40,7 +40,8 @@ class CustomerDao: ICustomerDao {
         name: String,
         surname: String,
         username: String,
-        password: String): Customer? = dbQuery{
+        password: String)
+    : Customer? = dbQuery{
 
         val insertStatement = Customers.insert {
             it[Customers.name] = name
@@ -55,7 +56,8 @@ class CustomerDao: ICustomerDao {
     override suspend fun editCustomer(
         id: Int,
         name: String,
-        surname: String): Boolean = dbQuery{
+        surname: String)
+    : Boolean = dbQuery{
 
         Customers.update({ Customers.id eq id }) {
             it[Customers.name] = name

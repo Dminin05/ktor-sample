@@ -5,9 +5,13 @@ import org.jetbrains.exposed.sql.Table
 
 
 @Serializable
-data class Customer(val id: Int? = null, val name: String, val surname: String, val username: String, val password: String) {
-
-}
+data class Customer(
+    val id: Int? = null,
+    val name: String,
+    val surname: String,
+    val username: String,
+    val password: String
+)
 
 object Customers : Table() {
     val id = integer("id").autoIncrement()

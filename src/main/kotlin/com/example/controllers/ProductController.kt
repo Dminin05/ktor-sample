@@ -23,11 +23,11 @@ private fun Route.config(){
         call.respond(productService.getAllProducts())
     }
     get("/{id}"){
-        call.respond(productService.getProductById(Integer.parseInt(call.parameters["id"])))
+        call.respond(productService.getProductById(Integer.parseInt(call.parameters["id"]))!!)
     }
     post{
-        val product = call.receive<Product>()
-        productService.addProduct(product)
+        val (_, title, price) = call.receive<Product>()
+        productService.addProduct(title, price)
         call.respond(HttpStatusCode.OK)
     }
     delete("/{id}"){
