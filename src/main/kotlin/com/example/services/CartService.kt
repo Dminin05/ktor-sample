@@ -10,13 +10,16 @@ class CartService : KoinComponent {
 
     val cartDao by inject<ICartDao>()
     val productService by inject<ProductService>()
+    val feedbackService by inject<FeedbackService>()
 
     suspend fun getCart(username: String): CartDto {
         val cartDto = CartDto()
         val list = cartDao.cart(username)
         list.forEach{
-            val product = productService.getProductById(it.id)
-            cartDto.products.add(product!!)
+            val product = productService.getProductById(it.productId!!)!!
+            val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
+            product.feedbacks = feedbacks
+            cartDto.products.add(product)
             cartDto.price += product.price
         }
         return cartDto

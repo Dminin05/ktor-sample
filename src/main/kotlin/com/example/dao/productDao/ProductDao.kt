@@ -9,13 +9,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class ProductDao : IProductDao {
 
-
-    init {
-        runBlocking {
-            addNewProduct("apple", 222)
-        }
-    }
-
     private fun resultRowToProduct(row: ResultRow) = Product(
         id = row[Products.id],
         title = row[Products.title],
@@ -49,12 +42,4 @@ class ProductDao : IProductDao {
     override suspend fun deleteProduct(id: Int): Boolean = dbQuery{
         Products.deleteWhere { Products.id eq id } > 0
     }
-
-//    val dao: IProductsDao = ProductDao().apply {
-//        runBlocking {
-//            if(allProducts().isEmpty()) {
-//                addNewProduct("apple", 230)
-//            }
-//        }
-//    }
 }
