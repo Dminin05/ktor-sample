@@ -1,13 +1,13 @@
 package com.example.services
 
-import com.example.dao.productDao.ProductDao
+import com.example.dao.productDao.IProductDao
 import com.example.models.Product
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ProductService: KoinComponent{
 
-    val productDao by inject<ProductDao>()
+    val productDao by inject<IProductDao>()
 
     suspend fun getAllProducts(): List<Product>{
         return productDao.allProducts()

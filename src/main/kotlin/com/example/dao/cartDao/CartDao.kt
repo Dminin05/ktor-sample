@@ -27,16 +27,16 @@ class CartDao : ICartDao{
 
     override suspend fun addProductInCart(
         username: String,
-        productId: Int)
-    : Cart? = dbQuery{
+        productId: Int
+    ): Cart? = dbQuery {
 
         val insertStatement = Carts.insert {
             it[Carts.username] = username
             it[Carts.productId] = productId
 
         }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCart)
 
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCart)
     }
 
     override suspend fun deleteProductFromCart(

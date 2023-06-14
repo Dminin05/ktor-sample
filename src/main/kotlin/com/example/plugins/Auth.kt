@@ -36,7 +36,7 @@ fun Application.configureAuth() {
                 }
 
                 val role = claims["role"]?.asString()
-                if (role != "USER") {
+                if (role != "USER" && role != "ADMIN") {
                     return@validate null
                 }
 

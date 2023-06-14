@@ -4,6 +4,7 @@ import com.example.models.Customer
 import com.example.services.CartService
 import com.example.services.CustomerService
 import com.example.services.ProductService
+import com.example.services.RoleService
 import com.example.utils.getUsernameFromToken
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -26,10 +27,16 @@ private fun Route.config(){
     val customerService by inject<CustomerService>()
     val productService by inject<ProductService>()
     val cartService by inject<CartService>()
+    val roleService by inject<RoleService>()
 
 
     get{
         call.respond(customerService.getAllCustomers())
+    }
+
+    get("/roles") {
+        val roles = roleService.getAllRoles()
+        call.respond(roles)
     }
 
     authenticate("user") {

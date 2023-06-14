@@ -7,13 +7,8 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class CustomerDao : ICustomerDao {
+class CustomerDao : ICustomerDao{
 
-    init {
-        runBlocking {
-            addNewCustomer("dima", "minin", "test","test", "USER")
-        }
-    }
 
     private fun resultRowToCustomer(row: ResultRow) = Customer(
         id = row[Customers.id],

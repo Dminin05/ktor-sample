@@ -1,13 +1,14 @@
 package com.example.services
 
 import com.example.dao.cartDao.CartDao
+import com.example.dao.cartDao.ICartDao
 import com.example.dtos.CartDto
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class CartService : KoinComponent {
 
-    val cartDao by inject<CartDao>()
+    val cartDao by inject<ICartDao>()
     val productService by inject<ProductService>()
 
     suspend fun getCart(username: String): CartDto {
@@ -23,8 +24,8 @@ class CartService : KoinComponent {
 
     suspend fun addProductInCart(
         username: String,
-        productId: Int)
-    {
+        productId: Int
+    ) {
 
         cartDao.addProductInCart(username, productId)
 
