@@ -13,7 +13,8 @@ data class Customer(
     val username: String,
     val password: String,
     val role: String,
-    var cart: CartDto = CartDto()
+    var cart: CartDto = CartDto(),
+    var feedbacks: MutableList<Feedback> = mutableListOf()
 )
 
 object Customers : Table() {

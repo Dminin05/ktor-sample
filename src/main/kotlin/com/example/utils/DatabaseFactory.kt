@@ -18,6 +18,7 @@ object DatabaseFactory {
             SchemaUtils.create(Customers)
             SchemaUtils.create(Carts)
             SchemaUtils.create(Products)
+            SchemaUtils.create(Feedbacks)
         }
     }
 

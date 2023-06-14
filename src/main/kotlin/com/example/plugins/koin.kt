@@ -4,14 +4,13 @@ import com.example.dao.cartDao.CartDao
 import com.example.dao.cartDao.ICartDao
 import com.example.dao.customerDao.CustomerDao
 import com.example.dao.customerDao.ICustomerDao
+import com.example.dao.feedbackDao.FeedbackDao
+import com.example.dao.feedbackDao.IFeedbackDao
 import com.example.dao.productDao.IProductDao
 import com.example.dao.productDao.ProductDao
 import com.example.dao.roleDao.IRoleDao
 import com.example.dao.roleDao.RoleDao
-import com.example.services.CartService
-import com.example.services.CustomerService
-import com.example.services.ProductService
-import com.example.services.RoleService
+import com.example.services.*
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -23,7 +22,7 @@ val customerModule = module{
 
 val productModule = module{
     single { ProductService() }
-    single<IProductDao>(createdAtStart = true) { ProductDao() }
+    single<IProductDao> { ProductDao() }
 }
 
 val cartModule = module{
@@ -36,6 +35,11 @@ val roleModule = module{
     single { RoleService() }
 }
 
+val feedbackModule = module{
+    single<IFeedbackDao> { FeedbackDao() }
+    single { FeedbackService() }
+}
+
 fun Application.configureKoin() = install(Koin) {
-    modules(roleModule, customerModule, productModule, cartModule)
+    modules(roleModule, customerModule, productModule, cartModule, feedbackModule)
 }
