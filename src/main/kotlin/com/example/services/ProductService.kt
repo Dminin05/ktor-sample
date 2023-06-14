@@ -11,20 +11,28 @@ class ProductService: KoinComponent{
     val feedbackService by inject<FeedbackService>()
 
     suspend fun getAllProducts(): List<Product>{
+
         val list = productDao.allProducts()
         var newList = mutableListOf<Product>()
+
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByProductId(it.id!!).toMutableList()
             it.feedbacks = feedbacks
             newList.add(it)
         }
+
         return newList
+
     }
     suspend fun getProductById(id: Int): Product? {
+
         val product = productDao.product(id)
         val feedbacks = feedbackService.getFeedbacksByProductId(product!!.id!!).toMutableList()
+
         product.feedbacks = feedbacks
+
         return product
+
     }
     suspend fun addProduct(title: String, price: Int){
         productDao.addNewProduct(title, price)

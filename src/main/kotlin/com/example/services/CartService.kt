@@ -3,6 +3,7 @@ package com.example.services
 import com.example.dao.cartDao.CartDao
 import com.example.dao.cartDao.ICartDao
 import com.example.dtos.CartDto
+import com.example.dtos.ProductDto
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -13,16 +14,24 @@ class CartService : KoinComponent {
     val feedbackService by inject<FeedbackService>()
 
     suspend fun getCart(username: String): CartDto {
+
         val cartDto = CartDto()
         val list = cartDao.cart(username)
+
         list.forEach{
+
             val product = productService.getProductById(it.productId!!)!!
+            val productDto = ProductDto(product.title, product.price)
             val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
+
             product.feedbacks = feedbacks
-            cartDto.products.add(product)
+            cartDto.products.add(productDto)
             cartDto.price += product.price
+
         }
+
         return cartDto
+
     }
 
     suspend fun addProductInCart(

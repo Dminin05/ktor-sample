@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CartDto(
-    val products: MutableList<Product> = mutableListOf(),
+    val products: MutableList<ProductDto> = mutableListOf(),
     var price: Int = 0
 )
