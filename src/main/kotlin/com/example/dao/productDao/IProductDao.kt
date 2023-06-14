@@ -2,7 +2,7 @@ package com.example.dao.productDao
 
 import com.example.models.Product
 
-interface IProductsDao {
+interface IProductDao {
 
     suspend fun allProducts(): List<Product>
     suspend fun product(id: Int): Product?

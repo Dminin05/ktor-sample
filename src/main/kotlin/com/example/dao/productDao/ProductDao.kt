@@ -1,7 +1,5 @@
 package com.example.dao.productDao
 
-import com.example.dao.customerDao.CustomerDao
-import com.example.dao.customerDao.ICustomerDao
 import com.example.models.Product
 import com.example.models.Products
 import com.example.utils.DatabaseFactory.dbQuery
@@ -9,8 +7,14 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class ProductDao : IProductsDao {
+class ProductDao : IProductDao {
 
+
+    init {
+        runBlocking {
+            addNewProduct("apple", 222)
+        }
+    }
 
     private fun resultRowToProduct(row: ResultRow) = Product(
         id = row[Products.id],
