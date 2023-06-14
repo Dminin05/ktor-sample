@@ -29,9 +29,10 @@ class CustomerService : KoinComponent {
         name: String,
         surname: String,
         username: String,
-        password: String) {
+        password: String,
+        role: String) {
 
-        custumerDao.addNewCustomer(name, surname, username, password)
+        custumerDao.addNewCustomer(name, surname, username, password, role)
 
     }
 

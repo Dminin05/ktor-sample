@@ -3,11 +3,17 @@ package com.example.dao.customerDao
 import com.example.models.Customer
 import com.example.models.Customers
 import com.example.utils.DatabaseFactory.dbQuery
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class CustomerDao : ICustomerDao {
 
+    init {
+        runBlocking {
+            addNewCustomer("dima", "minin", "test","test", "USER")
+        }
+    }
 
     private fun resultRowToCustomer(row: ResultRow) = Customer(
         id = row[Customers.id],
@@ -15,6 +21,7 @@ class CustomerDao : ICustomerDao {
         surname = row[Customers.surname],
         username = row[Customers.username],
         password = row[Customers.password],
+        role = row[Customers.role],
     )
 
     override suspend fun allCustomers(): List<Customer> = dbQuery {
@@ -39,7 +46,8 @@ class CustomerDao : ICustomerDao {
         name: String,
         surname: String,
         username: String,
-        password: String)
+        password: String,
+        role: String)
     : Customer? = dbQuery{
 
         val insertStatement = Customers.insert {
@@ -47,6 +55,7 @@ class CustomerDao : ICustomerDao {
             it[Customers.surname] = surname
             it[Customers.username] = username
             it[Customers.password] = password
+            it[Customers.role] = role
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToCustomer)
 
@@ -69,11 +78,4 @@ class CustomerDao : ICustomerDao {
         Customers.deleteWhere { Customers.id eq id } > 0
     }
 
-//    val dao: ICustomerDao = CustomerDao().apply {
-//        runBlocking {
-//            if(allCustomers().isEmpty()) {
-//                addNewCustomer("dima", "test")
-//            }
-//        }
-//    }
 }

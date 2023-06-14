@@ -15,7 +15,6 @@ fun main() {
 
 fun Application.module() {
 
-
     DatabaseFactory.init()
     configureKoin()
     configureAuth()

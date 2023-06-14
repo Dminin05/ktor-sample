@@ -8,7 +8,6 @@ import com.example.utils.getUsernameFromToken
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -33,7 +32,7 @@ private fun Route.config(){
         call.respond(customerService.getAllCustomers())
     }
 
-    authenticate("auth"){
+    authenticate("user") {
         get("/info"){
             val username = getUsernameFromToken(call)
             val customer = customerService.getCustomerByUsername(username)
@@ -41,14 +40,14 @@ private fun Route.config(){
         }
     }
 
-    authenticate("auth"){
+    authenticate("user"){
         get("/cart"){
             val username = getUsernameFromToken(call)
             call.respond(cartService.getCart(username))
         }
     }
 
-    authenticate("auth"){
+    authenticate("admin"){
         post("/cart/{productId}"){
             val username = getUsernameFromToken(call)
             val productId = call.parameters.getOrFail<Int>("productId")
@@ -57,24 +56,10 @@ private fun Route.config(){
         }
     }
 
-
-
-//    post("/addProductInCart/{customerId}/{productId}"){
-//
-//        val customerId = call.parameters.getOrFail<Int>("customerId")
-//        val productId = call.parameters.getOrFail<Int>("productId")
-//
-//        val customer = customerService.getCustomerById(customerId)!!
-//
-//        customer.cart.addProductInCart(productId)
-//
-//        call.respond(customer)
-//    }
-
     post {
-        val (_, name, surname, username, password) = call.receive<Customer>()
+        val (_, name, surname, username, password, role) = call.receive<Customer>()
         if (customerService.getCustomerByUsername(username) == null) {
-            customerService.addCustomer(name, surname, username, password)
+            customerService.addCustomer(name, surname, username, password, role)
             call.respond(HttpStatusCode.OK)
         } else {
             call.respond("user with username = $username, already exists")
