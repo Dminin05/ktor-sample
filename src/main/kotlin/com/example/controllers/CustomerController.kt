@@ -23,7 +23,6 @@ fun Routing.configureCustomerRouting() = route("/customers"){
 private fun Route.config(){
 
     val customerService by inject<CustomerService>()
-    val productService by inject<ProductService>()
     val cartService by inject<CartService>()
     val roleService by inject<RoleService>()
     val feedbackService by inject<FeedbackService>()
@@ -53,7 +52,7 @@ private fun Route.config(){
         }
     }
 
-    authenticate("admin"){
+    authenticate("user"){
         post("/cart/{productId}"){
             val username = getUsernameFromToken(call)
             val productId = call.parameters.getOrFail<Int>("productId")
@@ -61,24 +60,6 @@ private fun Route.config(){
             call.respond(cartService.getCart(username))
         }
     }
-
-    authenticate("admin"){
-        get("/feedbacks"){
-            call.respond(feedbackService.getAllFeedbacks())
-        }
-    }
-
-    authenticate("admin"){
-        post("/feedbacks/{productId}"){
-            val message = call.receive<ReceiveFeedback>().message
-            val productId = call.parameters.getOrFail<Int>("productId")
-            val username = getUsernameFromToken(call)
-            feedbackService.addFeedback(message, username, productId)
-            call.respond(HttpStatusCode.NoContent)
-        }
-    }
-
-
 
     post {
         val (_, name, surname, username, password, role) = call.receive<Customer>()
