@@ -1,8 +1,11 @@
 package com.example.dao.productDao
 
+import com.example.dao.customerDao.CustomerDao
+import com.example.dao.customerDao.ICustomerDao
 import com.example.models.Product
 import com.example.models.Products
 import com.example.utils.DatabaseFactory.dbQuery
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
@@ -42,4 +45,12 @@ class ProductDao : IProductsDao {
     override suspend fun deleteProduct(id: Int): Boolean = dbQuery{
         Products.deleteWhere { Products.id eq id } > 0
     }
+
+//    val dao: IProductsDao = ProductDao().apply {
+//        runBlocking {
+//            if(allProducts().isEmpty()) {
+//                addNewProduct("apple", 230)
+//            }
+//        }
+//    }
 }

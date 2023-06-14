@@ -4,7 +4,6 @@ import com.example.dao.cartDao.CartDao
 import com.example.dao.customerDao.CustomerDao
 import com.example.dao.customerDao.ICustomerDao
 import com.example.dao.productDao.ProductDao
-import com.example.models.Cart
 import com.example.services.CartService
 import com.example.services.CustomerService
 import com.example.services.ProductService
@@ -14,7 +13,7 @@ import org.koin.ktor.plugin.Koin
 
 val customerModule = module{
     single { CustomerService() }
-    single<ICustomerDao> { CustomerDao() }
+    single<ICustomerDao>(createdAtStart = true) { CustomerDao() }
 }
 
 val productModule = module{
