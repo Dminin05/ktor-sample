@@ -31,7 +31,6 @@ class CustomerService : KoinComponent {
 
 
     suspend fun getAllCustomers(): MutableList<Customer> {
-//        return custumerDao.allCustomers()
         val list = custumerDao.allCustomers()
         var newList = mutableListOf<Customer>()
 
@@ -47,7 +46,6 @@ class CustomerService : KoinComponent {
     }
 
     suspend fun getCustomerById(id: Int): Customer? {
-//        return custumerDao.customer(id)
         val customer = custumerDao.customer(id)
         val feedbacks = feedbackService.getFeedbacksByUsername(customer!!.username).toMutableList()
 
