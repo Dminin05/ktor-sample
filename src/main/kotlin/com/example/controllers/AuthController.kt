@@ -22,7 +22,7 @@ private fun Route.config(){
     post("/login") {
         val customerToLogin = call.receive<LoginRequest>()
         val customer = customerService.getCustomerByUsername(customerToLogin.username)
-        if (customer?.password == customerToLogin.password){
+        if (customer.password == customerToLogin.password){
             val token = createToken(customerToLogin.username, customer.role)
             call.respond(hashMapOf("token" to token))
         } else {

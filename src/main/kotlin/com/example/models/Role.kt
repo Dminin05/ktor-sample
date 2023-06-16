@@ -1,7 +1,10 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
 @Serializable
 data class Role(
@@ -9,12 +12,23 @@ data class Role(
     val role: String
 )
 
-object Roles : Table() {
+object Roles : IntIdTable() {
 
-    val id = integer("id").autoIncrement()
     val role = varchar("role", 1024).uniqueIndex()
 
-    override val primaryKey = PrimaryKey(id)
+}
+
+class RoleDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<RoleDao>(Roles)
+
+    var role by Roles.role
+
+    override fun toString(): String {
+        return "RoleDao(role='$role')"
+    }
+
+    fun toRole() = Role(id.value, role)
+
 }
 
 

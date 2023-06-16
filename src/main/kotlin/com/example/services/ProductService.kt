@@ -1,19 +1,20 @@
 package com.example.services
 
-import com.example.dao.productDao.IProductDao
 import com.example.models.Product
+import com.example.models.ProductDao
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ProductService: KoinComponent{
 
-    val productDao by inject<IProductDao>()
     val feedbackService by inject<FeedbackService>()
 
-    suspend fun getAllProducts(): List<Product>{
+    fun getAllProducts(): List<Product> = transaction{
 
-        val list = productDao.allProducts()
-        var newList = mutableListOf<Product>()
+        val list = ProductDao.all().map(ProductDao::toProduct)
+        val newList = mutableListOf<Product>()
 
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByProductId(it.id!!).toMutableList()
@@ -21,24 +22,31 @@ class ProductService: KoinComponent{
             newList.add(it)
         }
 
-        return newList
+        return@transaction newList
 
     }
-    suspend fun getProductById(id: Int): Product? {
+    fun getProductById(id: Int): Product = transaction{
 
-        val product = productDao.product(id)
-        val feedbacks = feedbackService.getFeedbacksByProductId(product!!.id!!).toMutableList()
+        val product = ProductDao[id].toProduct()
+        val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
 
         product.feedbacks = feedbacks
 
-        return product
+        return@transaction product
 
     }
-    suspend fun addProduct(title: String, price: Int){
-        productDao.addNewProduct(title, price)
+    fun addProduct(product: Product) = transaction{
+
+        ProductDao.new {
+            this.title = product.title
+            this.price = product.price
+        }
+
     }
-    suspend fun deleteProduct(id: Int){
-        productDao.deleteProduct(id)
+    fun deleteProduct(id: Int) = transaction{
+
+        ProductDao[id].delete()
+
     }
 
 }

@@ -1,26 +1,28 @@
 package com.example.services
 
-import com.example.dao.cartDao.CartDao
-import com.example.dao.cartDao.ICartDao
 import com.example.dtos.CartDto
 import com.example.dtos.ProductDto
+import com.example.models.CartItem
+import com.example.models.CartItemDao
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class CartService : KoinComponent {
 
-    val cartDao by inject<ICartDao>()
     val productService by inject<ProductService>()
     val feedbackService by inject<FeedbackService>()
 
-    suspend fun getCart(username: String): CartDto {
+    fun getCart(username: String): CartDto = transaction{
 
         val cartDto = CartDto()
-        val list = cartDao.cart(username)
+        val list = CartItemDao.all()
+            .filter { it.username == username }
+            .map(CartItemDao::toCartItem)
 
         list.forEach{
 
-            val product = productService.getProductById(it.productId!!)!!
+            val product = productService.getProductById(it.productId)
             val productDto = ProductDto(product.title, product.price)
             val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
 
@@ -30,25 +32,22 @@ class CartService : KoinComponent {
 
         }
 
-        return cartDto
+        return@transaction cartDto
 
     }
 
-    suspend fun addProductInCart(
-        username: String,
-        productId: Int
-    ) {
+    fun addProductInCart(cartItem: CartItem) = transaction {
 
-        cartDao.addProductInCart(username, productId)
+        CartItemDao.new {
+            this.username = cartItem.username
+            this.productId = cartItem.productId
+        }
 
     }
 
-    suspend fun deleteProductFromCart(
-        username: String,
-        productId: Int)
-    {
+    fun deleteProductFromCart(id: Int) = transaction{
 
-        cartDao.deleteProductFromCart(username, productId)
+        CartItemDao[id].delete()
 
     }
 

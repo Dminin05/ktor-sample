@@ -1,40 +1,54 @@
 package com.example.services
 
-import com.example.dao.feedbackDao.IFeedbackDao
 import com.example.models.Feedback
+import com.example.models.FeedbackDao
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class FeedbackService : KoinComponent{
 
-    val feedbackDao by inject<IFeedbackDao>()
+    fun getAllFeedbacks(): List<Feedback> = transaction{
 
-    suspend fun getAllFeedbacks(): List<Feedback>{
-        return feedbackDao.allFeedbacks()
+        return@transaction FeedbackDao.all().map(FeedbackDao::toFeedback)
+
     }
 
-    suspend fun getFeedbacksByUsername(username: String): List<Feedback>{
-        return feedbackDao.feedbacksByUsername(username)
+    fun getFeedbacksByUsername(username: String): List<Feedback> = transaction{
+
+        return@transaction FeedbackDao.all()
+            .filter { it.username == username }
+            .map(FeedbackDao::toFeedback)
+
     }
 
-    suspend fun getFeedbacksByProductId(id: Int): List<Feedback>{
-        return feedbackDao.feedbacksByProductId(id)
+    fun getFeedbacksByProductId(productId: Int): List<Feedback> = transaction{
+
+        return@transaction FeedbackDao.all()
+            .filter { it.productId == productId }
+            .map(FeedbackDao::toFeedback)
+
     }
 
-    suspend fun getFeedbackById(id: Int): Feedback?{
-        return feedbackDao.feedbackById(id)
+    fun getFeedbackById(id: Int): Feedback = transaction{
+
+        return@transaction FeedbackDao[id].toFeedback()
+
     }
 
-    suspend fun addFeedback(
-        message: String,
-        username: String,
-        productId: Int
-    ){
-        feedbackDao.addFeedback(message, username, productId)
+    fun addFeedback(feedback: Feedback) = transaction{
+
+        FeedbackDao.new {
+            this.message = feedback.message
+            this.username = feedback.username
+            this.productId = feedback.productId
+        }
+
     }
 
-    suspend fun deleteFeedback(id: Int){
-        feedbackDao.deleteFeedback(id)
+    fun deleteFeedback(id: Int) = transaction{
+
+        FeedbackDao[id].delete()
+
     }
 
 }

@@ -1,38 +1,38 @@
 package com.example.services
 
-import com.example.dao.customerDao.ICustomerDao
-import com.example.dao.productDao.IProductDao
-import com.example.dao.roleDao.IRoleDao
 import com.example.models.Customer
+import com.example.models.CustomerDao
 import com.example.models.Product
+import com.example.models.Role
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
 class CustomerService : KoinComponent {
 
-    val custumerDao by inject<ICustomerDao>()
     val cartService by inject<CartService>()
-    val roledao by inject<IRoleDao>()
-    val productDao by inject<IProductDao>()
+    val roleService by inject<RoleService>()
+    val productService by inject<ProductService>()
     val feedbackService by inject<FeedbackService>()
 
     init {
         runBlocking {
-            roledao.addRole("USER")
-            roledao.addRole("ADMIN")
-            custumerDao.addNewCustomer("dima", "minin", "user","user", "USER")
-            custumerDao.addNewCustomer("anton", "minin", "admin","admin", "ADMIN")
-            productDao.addNewProduct("apple", 222)
+            roleService.addRole(Role(null, "USER"))
+            roleService.addRole(Role(null, "ADMIN"))
+            addCustomer(Customer(null, "dima", "minin", "user","user", "USER"))
+            addCustomer(Customer(null, "anton", "verevkin", "admin","admin", "ADMIN"))
+            productService.addProduct(Product(null,"apple", 222))
         }
     }
 
 
 
-    suspend fun getAllCustomers(): MutableList<Customer> {
-        val list = custumerDao.allCustomers()
-        var newList = mutableListOf<Customer>()
+    suspend fun getAllCustomers(): MutableList<Customer> = newSuspendedTransaction{
+        val list = CustomerDao.all().map(CustomerDao::toCustomer)
+        val newList = mutableListOf<Customer>()
 
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByUsername(it.username).toMutableList()
@@ -41,47 +41,63 @@ class CustomerService : KoinComponent {
             newList.add(it)
         }
 
-        return newList
+        return@newSuspendedTransaction newList
 
     }
 
-    suspend fun getCustomerById(id: Int): Customer? {
-        val customer = custumerDao.customer(id)
-        val feedbacks = feedbackService.getFeedbacksByUsername(customer!!.username).toMutableList()
+    fun getCustomerById(id: Int): Customer = transaction{
+        val customer = CustomerDao[id].toCustomer()
+        val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
 
         customer.feedbacks = feedbacks
 
-        return customer
+        return@transaction customer
 
     }
 
 
-    suspend fun getCustomerByUsername(username: String): Customer? {
+    suspend fun getCustomerByUsername(username: String): Customer = newSuspendedTransaction {
 
-        val customer = custumerDao.customerByUsername(username) ?: return null
-        val feedbacks = feedbackService.getFeedbacksByUsername(customer!!.username).toMutableList()
+        val customer = CustomerDao.all()
+            .first { it.username == username }
+            .toCustomer()
+
+        val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
 
         customer.cart = cartService.getCart(username)
         customer.feedbacks = feedbacks
 
-        return customer
+        return@newSuspendedTransaction customer
 
     }
 
-    suspend fun addCustomer(
-        name: String,
-        surname: String,
-        username: String,
-        password: String,
-        role: String) {
+    fun addCustomer(customer: Customer): Customer? = transaction{
 
-        custumerDao.addNewCustomer(name, surname, username, password, role)
+        val list = CustomerDao.all().map(CustomerDao::toCustomer)
+
+        list.forEach {
+
+            if (it.username == customer.username){
+                return@transaction null
+            }
+
+        }
+
+        CustomerDao.new {
+            this.name = customer.name
+            this.surname = customer.surname
+            this.username = customer.username
+            this.password = customer.password
+            this.role = customer.role
+        }
+
+        return@transaction customer
 
     }
 
-    suspend fun deleteCustomer(id: Int){
+    fun deleteCustomer(id: Int) = transaction{
 
-        custumerDao.deleteCustomer(id)
+        CustomerDao[id].delete()
 
     }
 

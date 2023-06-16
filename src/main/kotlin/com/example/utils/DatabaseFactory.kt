@@ -4,7 +4,6 @@ import com.example.models.*
 import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -16,7 +15,7 @@ object DatabaseFactory {
         transaction(database) {
             SchemaUtils.create(Roles)
             SchemaUtils.create(Customers)
-            SchemaUtils.create(Carts)
+            SchemaUtils.create(CartItems)
             SchemaUtils.create(Products)
             SchemaUtils.create(Feedbacks)
         }
