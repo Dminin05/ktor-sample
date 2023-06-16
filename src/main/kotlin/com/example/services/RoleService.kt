@@ -1,24 +1,26 @@
 package com.example.services
 
-import com.example.dao.roleDao.IRoleDao
 import com.example.models.Role
+import com.example.models.RoleDao
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class RoleService : KoinComponent{
 
-    val roleDao by inject<IRoleDao>()
+    fun addRole(role: Role) = transaction{
 
-    suspend fun addRole(role: String){
-        roleDao.addRole(role)
+        RoleDao.new {
+            this.role = role.role
+        }
+
     }
 
-    suspend fun getRole(id: Int){
-        roleDao.role(id)
+    fun getRole(id: Int) = transaction{
+        return@transaction RoleDao[id].toRole()
     }
 
-    suspend fun getAllRoles(): List<Role> {
-        return roleDao.allRoles()
+    fun getAllRoles(): List<Role> = transaction{
+        return@transaction RoleDao.all().map(RoleDao::toRole)
     }
 
 }

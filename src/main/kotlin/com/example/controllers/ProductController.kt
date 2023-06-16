@@ -7,6 +7,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import org.koin.ktor.ext.inject
 
 fun Routing.configureProductRouting()  = route("/products") {
@@ -17,17 +18,24 @@ fun Routing.configureProductRouting()  = route("/products") {
 
 private fun Route.config(){
 
-    val productService: ProductService by inject()
+    val productService by inject<ProductService>()
 
     get{
         call.respond(productService.getAllProducts())
     }
     get("/{id}"){
-        call.respond(productService.getProductById(Integer.parseInt(call.parameters["id"]))!!)
+
+        val id = call.parameters.getOrFail<Int>("id")
+        val product = productService.getProductById(id)
+
+        call.respond(product)
+
     }
     post{
-        val (_, title, price) = call.receive<Product>()
-        productService.addProduct(title, price)
+
+        val product = call.receive<Product>()
+        productService.addProduct(product)
+
         call.respond(HttpStatusCode.OK)
     }
     delete("/{id}"){

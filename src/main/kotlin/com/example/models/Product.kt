@@ -1,6 +1,10 @@
 package com.example.models
 
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Table
 
 @Serializable
@@ -11,10 +15,21 @@ data class Product(
     var feedbacks: MutableList<Feedback> = mutableListOf()
 )
 
-object Products : Table() {
-    val id = integer("id").autoIncrement()
+object Products : IntIdTable() {
     val title = varchar("title", 1024)
     val price = integer("price")
+}
 
-    override val primaryKey = PrimaryKey(id)
+class ProductDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ProductDao>(Products)
+
+    var title by Products.title
+    var price by Products.price
+
+    override fun toString(): String {
+        return "ProductDao(title='$title', price=$price)"
+    }
+
+    fun toProduct() = Product(id.value, title, price)
+
 }

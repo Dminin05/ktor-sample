@@ -1,12 +1,8 @@
 package com.example.controllers
 
-import com.example.dtos.LoginRequest
 import com.example.dtos.ReceiveFeedback
-import com.example.services.CartService
-import com.example.services.CustomerService
+import com.example.models.Feedback
 import com.example.services.FeedbackService
-import com.example.services.RoleService
-import com.example.utils.createToken
 import com.example.utils.getUsernameFromToken
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -29,7 +25,9 @@ private fun Route.config(){
 
     authenticate("admin"){
         get{
+
             call.respond(feedbackService.getAllFeedbacks())
+
         }
     }
 
@@ -39,10 +37,11 @@ private fun Route.config(){
             val message = call.receive<ReceiveFeedback>().message
             val productId = call.parameters.getOrFail<Int>("productId")
             val username = getUsernameFromToken(call)
+            val feedback = Feedback(null, message, username, productId)
 
-            feedbackService.addFeedback(message, username, productId)
+            feedbackService.addFeedback(feedback)
 
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(HttpStatusCode.OK)
 
         }
     }
