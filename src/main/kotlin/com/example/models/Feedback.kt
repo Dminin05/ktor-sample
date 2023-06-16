@@ -12,7 +12,8 @@ data class Feedback(
     val id: Int? = null,
     val message: String,
     val username: String,
-    val productId: Int
+    val productId: Int,
+    var status: StatusFeedback
 )
 
 object Feedbacks : IntIdTable() {
@@ -20,6 +21,7 @@ object Feedbacks : IntIdTable() {
     val message = varchar("message", 128)
     val username = varchar("username", 128).references(Customers.username)
     val productId = integer("productId").references(Products.id)
+    val status = enumeration<StatusFeedback>("status")
 
 }
 
@@ -30,11 +32,13 @@ class FeedbackDao(id: EntityID<Int>) : IntEntity(id) {
     var message by Feedbacks.message
     var username by Feedbacks.username
     var productId by Feedbacks.productId
+    var status by Feedbacks.status
 
-    fun toFeedback() = Feedback(id.value, message, username, productId)
+    fun toFeedback() = Feedback(id.value, message, username, productId, status)
 
     override fun toString(): String {
-        return "FeedbackDao(message='$message', username='$username', productId=$productId)"
+        return "FeedbackDao(message='$message', username='$username', productId=$productId, status=$status)"
     }
+
 
 }
