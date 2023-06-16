@@ -1,7 +1,9 @@
 package com.example.models
 
-enum class StatusFeedback(val status: String) {
+enum class StatusFeedback(
+    val status: String
+) {
 
-    Accepted("Accepted"), Rejected("Rejected"), Unchecked("Unchecked")
+    ACCEPTED("Accepted"), REJECTED("Rejected"), UNCHECKED("Unchecked")
 
 }

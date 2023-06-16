@@ -30,7 +30,7 @@ class CustomerService : KoinComponent {
 
 
 
-    suspend fun getAllCustomers(): MutableList<Customer> = newSuspendedTransaction{
+    suspend fun getAllCustomers(): MutableList<Customer> = newSuspendedTransaction {
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
         val newList = mutableListOf<Customer>()
 
@@ -45,7 +45,7 @@ class CustomerService : KoinComponent {
 
     }
 
-    fun getCustomerById(id: Int): Customer = transaction{
+    fun getCustomerById(id: Int): Customer = transaction {
         val customer = CustomerDao[id].toCustomer()
         val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
 
@@ -56,7 +56,7 @@ class CustomerService : KoinComponent {
     }
 
 
-    suspend fun getCustomerByUsername(username: String): Customer = newSuspendedTransaction {
+    fun getCustomerByUsername(username: String): Customer = transaction {
 
         val customer = CustomerDao.all()
             .first { it.username == username }
@@ -67,11 +67,11 @@ class CustomerService : KoinComponent {
         customer.cart = cartService.getCart(username)
         customer.feedbacks = feedbacks
 
-        return@newSuspendedTransaction customer
+        return@transaction customer
 
     }
 
-    fun addCustomer(customer: Customer): Customer? = transaction{
+    fun addCustomer(customer: Customer): Customer? = transaction {
 
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
 
@@ -95,7 +95,7 @@ class CustomerService : KoinComponent {
 
     }
 
-    fun deleteCustomer(id: Int) = transaction{
+    fun deleteCustomer(id: Int) = transaction {
 
         CustomerDao[id].delete()
 

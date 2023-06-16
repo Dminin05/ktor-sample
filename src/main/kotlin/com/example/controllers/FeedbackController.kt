@@ -38,7 +38,7 @@ private fun Route.config(){
             val message = call.receive<ReceiveFeedback>().message
             val productId = call.parameters.getOrFail<Int>("productId")
             val username = getUsernameFromToken(call)
-            val feedback = Feedback(null, message, username, productId, StatusFeedback.Unchecked)
+            val feedback = Feedback(null, message, username, productId, StatusFeedback.UNCHECKED)
 
             feedbackService.addFeedback(feedback)
 

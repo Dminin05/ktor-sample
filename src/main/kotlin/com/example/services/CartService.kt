@@ -13,7 +13,7 @@ class CartService : KoinComponent {
     val productService by inject<ProductService>()
     val feedbackService by inject<FeedbackService>()
 
-    fun getCart(username: String): CartDto = transaction{
+    fun getCart(username: String): CartDto = transaction {
 
         val cartDto = CartDto()
         val list = CartItemDao.all()
@@ -45,7 +45,7 @@ class CartService : KoinComponent {
 
     }
 
-    fun deleteProductFromCart(id: Int) = transaction{
+    fun deleteProductFromCart(id: Int) = transaction {
 
         CartItemDao[id].delete()
 
