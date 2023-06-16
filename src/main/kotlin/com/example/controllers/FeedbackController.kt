@@ -2,6 +2,7 @@ package com.example.controllers
 
 import com.example.dtos.ReceiveFeedback
 import com.example.models.Feedback
+import com.example.models.StatusFeedback
 import com.example.services.FeedbackService
 import com.example.utils.getUsernameFromToken
 import io.ktor.http.*
@@ -37,7 +38,7 @@ private fun Route.config(){
             val message = call.receive<ReceiveFeedback>().message
             val productId = call.parameters.getOrFail<Int>("productId")
             val username = getUsernameFromToken(call)
-            val feedback = Feedback(null, message, username, productId)
+            val feedback = Feedback(null, message, username, productId, StatusFeedback.Unchecked)
 
             feedbackService.addFeedback(feedback)
 
@@ -52,6 +53,31 @@ private fun Route.config(){
             val id = call.parameters.getOrFail<Int>("id")
 
             feedbackService.deleteFeedback(id)
+
+        }
+    }
+
+    authenticate("admin"){
+        put("/updateToAccepted/{feedbackId}") {
+
+            val feedbackId = call.parameters.getOrFail<Int>("feedbackId")
+
+            feedbackService.updateToAccepted(feedbackId)
+
+            call.respond(HttpStatusCode.OK)
+
+
+        }
+    }
+
+    authenticate("admin"){
+        put("/updateToRejected/{feedbackId}") {
+
+            val feedbackId = call.parameters.getOrFail<Int>("feedbackId")
+
+            feedbackService.updateToRejected(feedbackId)
+
+            call.respond(HttpStatusCode.OK)
 
         }
     }
