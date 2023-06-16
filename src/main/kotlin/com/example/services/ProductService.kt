@@ -7,11 +7,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ProductService: KoinComponent{
+class ProductService : KoinComponent {
 
     val feedbackService by inject<FeedbackService>()
 
-    fun getAllProducts(): List<Product> = transaction{
+    fun getAllProducts(): List<Product> = transaction {
 
         val list = ProductDao.all().map(ProductDao::toProduct)
         val newList = mutableListOf<Product>()
@@ -25,7 +25,7 @@ class ProductService: KoinComponent{
         return@transaction newList
 
     }
-    fun getProductById(id: Int): Product = transaction{
+    fun getProductById(id: Int): Product = transaction {
 
         val product = ProductDao[id].toProduct()
         val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
@@ -35,7 +35,7 @@ class ProductService: KoinComponent{
         return@transaction product
 
     }
-    fun addProduct(product: Product) = transaction{
+    fun addProduct(product: Product) = transaction {
 
         ProductDao.new {
             this.title = product.title
@@ -43,7 +43,7 @@ class ProductService: KoinComponent{
         }
 
     }
-    fun deleteProduct(id: Int) = transaction{
+    fun deleteProduct(id: Int) = transaction {
 
         ProductDao[id].delete()
 

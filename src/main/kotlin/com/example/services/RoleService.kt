@@ -5,9 +5,9 @@ import com.example.models.RoleDao
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 
-class RoleService : KoinComponent{
+class RoleService : KoinComponent {
 
-    fun addRole(role: Role) = transaction{
+    fun addRole(role: Role) = transaction {
 
         RoleDao.new {
             this.role = role.role
@@ -15,11 +15,11 @@ class RoleService : KoinComponent{
 
     }
 
-    fun getRole(id: Int) = transaction{
+    fun getRole(id: Int) = transaction {
         return@transaction RoleDao[id].toRole()
     }
 
-    fun getAllRoles(): List<Role> = transaction{
+    fun getAllRoles(): List<Role> = transaction {
         return@transaction RoleDao.all().map(RoleDao::toRole)
     }
 
