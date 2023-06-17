@@ -23,6 +23,15 @@ private fun Route.config(){
     get{
         call.respond(productService.getAllProducts())
     }
+
+    get("page/{offset}") {
+
+        val offset = call.parameters.getOrFail<Long>("offset")
+
+        call.respond(productService.getPageProducts(offset))
+
+    }
+
     get("/{id}"){
 
         val id = call.parameters.getOrFail<Int>("id")
@@ -31,6 +40,7 @@ private fun Route.config(){
         call.respond(product)
 
     }
+
     post{
 
         val product = call.receive<Product>()
@@ -38,7 +48,9 @@ private fun Route.config(){
 
         call.respond(HttpStatusCode.OK)
     }
+
     delete("/{id}"){
         productService.deleteProduct(Integer.parseInt(call.parameters["id"]))
     }
+
 }

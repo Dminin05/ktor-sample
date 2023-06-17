@@ -1,11 +1,18 @@
 package com.example.services
 
+import com.example.dtos.PageResult
 import com.example.models.Product
 import com.example.models.ProductDao
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import com.example.models.Products
+import org.h2.mvstore.Page
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.print.PageFormat
+import java.awt.print.Pageable
 
 class ProductService : KoinComponent {
 
@@ -25,6 +32,18 @@ class ProductService : KoinComponent {
         return@transaction newList
 
     }
+
+    fun getPageProducts(offset: Long): PageResult<Product> = transaction {
+
+        val limit = 2
+
+        val productsList = ProductDao.all().limit(limit, offset = offset).map(ProductDao::toProduct)
+        val page = PageResult<Product>(offset, limit, productsList)
+
+        return@transaction page
+
+    }
+
     fun getProductById(id: Int): Product = transaction {
 
         val product = ProductDao[id].toProduct()
