@@ -29,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-cio:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
 
     implementation("io.insert-koin:koin-core:3.3.3")
     implementation("io.insert-koin:koin-ktor:3.3.1")

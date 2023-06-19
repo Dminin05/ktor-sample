@@ -7,7 +7,6 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() = routing {
 
-
     configureCustomerRouting()
     configureProductRouting()
     configureAuthRouting()

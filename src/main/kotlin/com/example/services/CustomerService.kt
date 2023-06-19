@@ -30,18 +30,19 @@ class CustomerService : KoinComponent {
 
 
 
-    suspend fun getAllCustomers(): MutableList<CustomerDto> = newSuspendedTransaction {
+    fun getAllCustomers(): MutableList<CustomerDto> = transaction {
+
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
         val newList = mutableListOf<CustomerDto>()
 
-        list.forEach{
+        list.forEach {
             val feedbacks = feedbackService.getFeedbacksByUsername(it.username).toMutableList()
             it.cart = cartService.getCart(it.username)
             it.feedbacks = feedbacks
             newList.add(it)
         }
 
-        return@newSuspendedTransaction newList
+        return@transaction newList
     }
 
     fun getCustomerById(id: Int): CustomerDto = transaction {

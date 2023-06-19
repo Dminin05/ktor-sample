@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.services.*
+import com.example.utils.properties
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -25,10 +26,13 @@ val feedbackModule = module{
     single { FeedbackService() }
 }
 
-val authModule = module{
-    single { AuthService() }
-}
+
 
 fun Application.configureKoin() = install(Koin) {
+
+    val authModule = module{
+        single { AuthService(properties()) }
+    }
+
     modules(authModule, roleModule, customerModule, productModule, cartModule, feedbackModule)
 }
