@@ -29,12 +29,12 @@ dependencies {
     implementation("io.ktor:ktor-server-cio:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
 
     implementation("io.insert-koin:koin-core:3.3.3")
     implementation("io.insert-koin:koin-ktor:3.3.1")
 
     implementation("org.flywaydb:flyway-core:7.5.1")
-
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
@@ -43,7 +43,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
-
+    implementation("org.mindrot:jbcrypt:0.4")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-auth-jvm:2.3.0")

@@ -1,27 +1,20 @@
 package com.example.services
 
-import com.example.dtos.PageResult
-import com.example.models.Product
+import com.example.dto.product.PageResult
+import com.example.dto.product.ProductDto
 import com.example.models.ProductDao
-import com.example.models.Products
-import org.h2.mvstore.Page
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.awt.print.PageFormat
-import java.awt.print.Pageable
 
 class ProductService : KoinComponent {
 
     val feedbackService by inject<FeedbackService>()
 
-    fun getAllProducts(): List<Product> = transaction {
+    fun getAllProducts(): List<ProductDto> = transaction {
 
         val list = ProductDao.all().map(ProductDao::toProduct)
-        val newList = mutableListOf<Product>()
+        val newList = mutableListOf<ProductDto>()
 
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByProductId(it.id!!).toMutableList()
@@ -30,31 +23,28 @@ class ProductService : KoinComponent {
         }
 
         return@transaction newList
-
     }
 
-    fun getPageProducts(offset: Long): PageResult<Product> = transaction {
+    fun getPageProducts(offset: Long): PageResult<ProductDto> = transaction {
 
         val limit = 2
 
         val productsList = ProductDao.all().limit(limit, offset = offset).map(ProductDao::toProduct)
-        val page = PageResult<Product>(offset, limit, productsList)
+        val page = PageResult<ProductDto>(offset, limit, productsList)
 
         return@transaction page
-
     }
 
-    fun getProductById(id: Int): Product = transaction {
+    fun getProductById(id: Int): ProductDto = transaction {
 
-        val product = ProductDao[id].toProduct()
+        val product = ProductDao.findById(id)!!.toProduct()
         val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
 
         product.feedbacks = feedbacks
 
         return@transaction product
-
     }
-    fun addProduct(product: Product) = transaction {
+    fun addProduct(product: ProductDto) = transaction {
 
         ProductDao.new {
             this.title = product.title
@@ -64,7 +54,7 @@ class ProductService : KoinComponent {
     }
     fun deleteProduct(id: Int) = transaction {
 
-        ProductDao[id].delete()
+        ProductDao.findById(id)!!.delete()
 
     }
 
