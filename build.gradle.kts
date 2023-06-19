@@ -36,7 +36,6 @@ dependencies {
 
     implementation("org.flywaydb:flyway-core:7.5.1")
 
-
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
@@ -44,7 +43,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
-
+    implementation("org.mindrot:jbcrypt:0.4")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-auth-jvm:2.3.0")

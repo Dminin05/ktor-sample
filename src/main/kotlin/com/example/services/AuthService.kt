@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.example.dto.auth.PropertiesDto
 import org.koin.core.component.KoinComponent
 import java.util.*
+import org.mindrot.jbcrypt.BCrypt
 
 class AuthService(private val properties: PropertiesDto) : KoinComponent{
 
@@ -19,6 +20,13 @@ class AuthService(private val properties: PropertiesDto) : KoinComponent{
             .sign(Algorithm.HMAC256(properties.jwtSecret))
 
         return token
+
+    }
+
+    fun checkPassword(receivePassword: String, correctPassword: String): Boolean {
+
+        val isPasswordCorrect = BCrypt.checkpw(receivePassword, correctPassword)
+        return isPasswordCorrect
 
     }
 

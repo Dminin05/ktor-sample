@@ -25,7 +25,7 @@ private fun Route.config() {
 
         val customerToLogin = call.receive<LoginRequest>()
         val customer = customerService.getCustomerByUsername(customerToLogin.username)
-        if (customer.password == customerToLogin.password){
+        if (authService.checkPassword(customerToLogin.password, customer.password)){
             val token = TokenDto(authService.createToken(customerToLogin.username, customer.role)!!)
             call.respond(token)
         } else {

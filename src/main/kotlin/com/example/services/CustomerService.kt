@@ -5,7 +5,6 @@ import com.example.dto.customer.RoleDto
 import com.example.dto.product.ProductDto
 import com.example.models.CustomerDao
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -22,8 +21,8 @@ class CustomerService : KoinComponent {
         runBlocking {
             roleService.addRole(RoleDto(null, "USER"))
             roleService.addRole(RoleDto(null, "ADMIN"))
-            addCustomer(CustomerDto(null, "dima", "minin", "user","user", "USER"))
-            addCustomer(CustomerDto(null, "anton", "verevkin", "admin","admin", "ADMIN"))
+            addCustomer(CustomerDto(null, "dima", "minin", "user","\$2a\$12\$diyNE5e2GkKOGltkcFx2CubEjJ.oSfamBCGKMkw9gR572RxvfhdOC", "USER"))
+            addCustomer(CustomerDto(null, "anton", "verevkin", "admin","\$2a\$12\$JIgIwGjnkTnU3bAwVBNS9.Vpm8zjSeLSJctZadx.XNpAQf/IiwGPC", "ADMIN"))
             productService.addProduct(ProductDto(null,"apple", 222))
         }
     }
