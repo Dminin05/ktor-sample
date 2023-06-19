@@ -25,11 +25,16 @@ private fun Route.config() {
 
         val customerToLogin = call.receive<LoginRequest>()
         val customer = customerService.getCustomerByUsername(customerToLogin.username)
-        if (authService.checkPassword(customerToLogin.password, customer.password)){
+
+        if (authService.checkPassword(customerToLogin.password, customerToLogin.username)){
+
             val token = TokenDto(authService.createToken(customerToLogin.username, customer.role)!!)
             call.respond(token)
+
         } else {
+
             call.respond("bad password or username")
+
         }
 
     }

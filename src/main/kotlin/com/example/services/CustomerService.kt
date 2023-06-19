@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.mindrot.jbcrypt.BCrypt
 
 
 class CustomerService : KoinComponent {
@@ -21,8 +22,8 @@ class CustomerService : KoinComponent {
         runBlocking {
             roleService.addRole(RoleDto(null, "USER"))
             roleService.addRole(RoleDto(null, "ADMIN"))
-            addCustomer(CustomerDto(null, "dima", "minin", "user","\$2a\$12\$diyNE5e2GkKOGltkcFx2CubEjJ.oSfamBCGKMkw9gR572RxvfhdOC", "USER"))
-            addCustomer(CustomerDto(null, "anton", "verevkin", "admin","\$2a\$12\$JIgIwGjnkTnU3bAwVBNS9.Vpm8zjSeLSJctZadx.XNpAQf/IiwGPC", "ADMIN"))
+            addCustomer(CustomerDto(null, "dima", "minin", "user","user", "USER"))
+            addCustomer(CustomerDto(null, "anton", "verevkin", "admin", "admin", "ADMIN"))
             productService.addProduct(ProductDto(null,"apple", 222))
         }
     }
@@ -70,6 +71,7 @@ class CustomerService : KoinComponent {
 
     fun addCustomer(customer: CustomerDto): CustomerDto? = transaction {
 
+        val password = BCrypt.hashpw(customer.password, BCrypt.gensalt())
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
 
         list.forEach {
@@ -84,7 +86,7 @@ class CustomerService : KoinComponent {
             this.name = customer.name
             this.surname = customer.surname
             this.username = customer.username
-            this.password = customer.password
+            this.password = password
             this.role = customer.role
         }
 

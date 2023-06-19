@@ -4,12 +4,18 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.dto.auth.PropertiesDto
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 import org.mindrot.jbcrypt.BCrypt
 
 class AuthService(private val properties: PropertiesDto) : KoinComponent{
 
-    fun createToken(username: String, role: String): String? {
+    val customerService by inject<CustomerService>()
+
+    fun createToken(
+        username: String,
+        role: String
+    ): String? {
 
         val token = JWT.create()
             .withAudience(properties.jwtAudience)
@@ -23,11 +29,14 @@ class AuthService(private val properties: PropertiesDto) : KoinComponent{
 
     }
 
-    fun checkPassword(receivePassword: String, correctPassword: String): Boolean {
+    fun checkPassword(
+        receivePassword: String,
+        username: String
+    ): Boolean {
 
-        val isPasswordCorrect = BCrypt.checkpw(receivePassword, correctPassword)
+        val customer = customerService.getCustomerByUsername(username)
+        val isPasswordCorrect = BCrypt.checkpw(receivePassword, customer.password)
         return isPasswordCorrect
-
     }
 
 }
