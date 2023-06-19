@@ -25,6 +25,10 @@ val feedbackModule = module{
     single { FeedbackService() }
 }
 
+val authModule = module{
+    single { AuthService() }
+}
+
 fun Application.configureKoin() = install(Koin) {
-    modules(roleModule, customerModule, productModule, cartModule, feedbackModule)
+    modules(authModule, roleModule, customerModule, productModule, cartModule, feedbackModule)
 }

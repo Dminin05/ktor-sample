@@ -1,9 +1,9 @@
 package com.example.controllers
 
-import com.example.models.CartItem
-import com.example.models.Customer
+import com.example.dto.cart.CartItemDto
+import com.example.dto.customer.CustomerDto
+import com.example.extensions.getUsernameFromToken
 import com.example.services.*
-import com.example.utils.getUsernameFromToken
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,89 +16,95 @@ import org.koin.ktor.ext.inject
 
 fun Routing.configureCustomerRouting() = route("/customers"){
 
-    config()
+    userConfig()
+    adminConfig()
 
 }
 
-private fun Route.config(){
+private fun Route.userConfig(){
 
     val customerService by inject<CustomerService>()
     val cartService by inject<CartService>()
-    val roleService by inject<RoleService>()
-
-    get{
-
-        call.respond(customerService.getAllCustomers())
-
-    }
-
-    get("/roles") {
-
-        val roles = roleService.getAllRoles()
-
-        call.respond(roles)
-
-    }
 
     authenticate("user") {
-        get("/info"){
 
-            val username = getUsernameFromToken(call)
+        get("/info") {
+
+            val username = call.getUsernameFromToken()
             val customer = customerService.getCustomerByUsername(username)
 
             call.respond(customer)
 
         }
-    }
 
-    authenticate("user"){
-        get("/cart"){
+        get("/cart") {
 
-            val username = getUsernameFromToken(call)
+            val username = call.getUsernameFromToken()
 
             call.respond(cartService.getCart(username))
 
         }
-    }
 
-    authenticate("user"){
-        post("/cart/{productId}"){
+        post("/cart/{productId}") {
 
-            val username = getUsernameFromToken(call)
+            val username = call.getUsernameFromToken()
             val productId = call.parameters.getOrFail<Int>("productId")
 
-            cartService.addProductInCart(CartItem(null, username, productId))
+            cartService.addProductInCart(CartItemDto(null, username, productId))
 
-            call.respond(HttpStatusCode.OK)
-
-        }
-    }
-
-    post {
-
-        val customer = call.receive<Customer>()
-
-        if(customerService.addCustomer(customer) == null){
-
-            call.respond(HttpStatusCode.Conflict, "user with username = ${customer.username}, already exists")
-
-        } else {
-
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.NoContent)
 
         }
 
-    }
-
-    authenticate("user") {
-        delete("/{id}"){
+        delete("/{id}") {
 
             val customerId = call.parameters.getOrFail<Int>("id")
 
             customerService.deleteCustomer(customerId)
 
         }
+
     }
 
+}
+
+private fun Route.adminConfig(){
+
+    val customerService by inject<CustomerService>()
+    val roleService by inject<RoleService>()
+
+    authenticate("admin") {
+
+        post {
+
+            val customer = call.receive<CustomerDto>()
+
+            if(customerService.addCustomer(customer) == null){
+
+                call.respond(HttpStatusCode.Conflict, "user with username = ${customer.username}, already exists")
+
+            } else {
+
+                call.respond(HttpStatusCode.NoContent)
+
+            }
+
+        }
+
+        get{
+
+            call.respond(customerService.getAllCustomers())
+
+        }
+
+        get("/roles") {
+
+            val roles = roleService.getAllRoles()
+
+            call.respond(roles)
+
+        }
+
+    }
 
 }

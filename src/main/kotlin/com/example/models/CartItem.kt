@@ -1,19 +1,10 @@
 package com.example.models
 
-import kotlinx.serialization.Serializable
+import com.example.dto.cart.CartItemDto
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Table
-
-
-@Serializable
-data class CartItem(
-    val id: Int? = null,
-    val username: String,
-    val productId: Int
-)
 
 object CartItems : IntIdTable() {
 
@@ -28,6 +19,10 @@ class CartItemDao(id: EntityID<Int>) : IntEntity(id) {
     var username by CartItems.username
     var productId by CartItems.productId
 
-    fun toCartItem() = CartItem(id.value, username, productId)
+    fun toCartItem() = CartItemDto(
+        id.value,
+        username,
+        productId
+    )
 
 }

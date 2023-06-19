@@ -1,8 +1,8 @@
 package com.example.services
 
-import com.example.dtos.CartDto
-import com.example.dtos.ProductDto
-import com.example.models.CartItem
+import com.example.dto.cart.CartDto
+import com.example.dto.cart.CartItemDto
+import com.example.dto.product.ProductDtoForCarts
 import com.example.models.CartItemDao
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
@@ -23,7 +23,7 @@ class CartService : KoinComponent {
         list.forEach{
 
             val product = productService.getProductById(it.productId)
-            val productDto = ProductDto(product.title, product.price)
+            val productDto = ProductDtoForCarts(product.title, product.price)
             val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
 
             product.feedbacks = feedbacks
@@ -33,10 +33,9 @@ class CartService : KoinComponent {
         }
 
         return@transaction cartDto
-
     }
 
-    fun addProductInCart(cartItem: CartItem) = transaction {
+    fun addProductInCart(cartItem: CartItemDto) = transaction {
 
         CartItemDao.new {
             this.username = cartItem.username
@@ -47,7 +46,7 @@ class CartService : KoinComponent {
 
     fun deleteProductFromCart(id: Int) = transaction {
 
-        CartItemDao[id].delete()
+        CartItemDao.findById(id)!!.delete()
 
     }
 

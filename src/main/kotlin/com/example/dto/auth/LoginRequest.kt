@@ -1,4 +1,4 @@
-package com.example.dtos
+package com.example.dto.auth
 
 import kotlinx.serialization.Serializable
 

@@ -1,9 +1,9 @@
 package com.example.services
 
-import com.example.models.Customer
+import com.example.dto.customer.CustomerDto
+import com.example.dto.customer.RoleDto
+import com.example.dto.product.ProductDto
 import com.example.models.CustomerDao
-import com.example.models.Product
-import com.example.models.Role
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -20,19 +20,19 @@ class CustomerService : KoinComponent {
 
     init {
         runBlocking {
-            roleService.addRole(Role(null, "USER"))
-            roleService.addRole(Role(null, "ADMIN"))
-            addCustomer(Customer(null, "dima", "minin", "user","user", "USER"))
-            addCustomer(Customer(null, "anton", "verevkin", "admin","admin", "ADMIN"))
-            productService.addProduct(Product(null,"apple", 222))
+            roleService.addRole(RoleDto(null, "USER"))
+            roleService.addRole(RoleDto(null, "ADMIN"))
+            addCustomer(CustomerDto(null, "dima", "minin", "user","user", "USER"))
+            addCustomer(CustomerDto(null, "anton", "verevkin", "admin","admin", "ADMIN"))
+            productService.addProduct(ProductDto(null,"apple", 222))
         }
     }
 
 
 
-    suspend fun getAllCustomers(): MutableList<Customer> = newSuspendedTransaction {
+    suspend fun getAllCustomers(): MutableList<CustomerDto> = newSuspendedTransaction {
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
-        val newList = mutableListOf<Customer>()
+        val newList = mutableListOf<CustomerDto>()
 
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByUsername(it.username).toMutableList()
@@ -42,21 +42,19 @@ class CustomerService : KoinComponent {
         }
 
         return@newSuspendedTransaction newList
-
     }
 
-    fun getCustomerById(id: Int): Customer = transaction {
-        val customer = CustomerDao[id].toCustomer()
+    fun getCustomerById(id: Int): CustomerDto = transaction {
+        val customer = CustomerDao.findById(id)!!.toCustomer()
         val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
 
         customer.feedbacks = feedbacks
 
         return@transaction customer
-
     }
 
 
-    fun getCustomerByUsername(username: String): Customer = transaction {
+    fun getCustomerByUsername(username: String): CustomerDto = transaction {
 
         val customer = CustomerDao.all()
             .first { it.username == username }
@@ -68,10 +66,9 @@ class CustomerService : KoinComponent {
         customer.feedbacks = feedbacks
 
         return@transaction customer
-
     }
 
-    fun addCustomer(customer: Customer): Customer? = transaction {
+    fun addCustomer(customer: CustomerDto): CustomerDto? = transaction {
 
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
 
@@ -92,12 +89,11 @@ class CustomerService : KoinComponent {
         }
 
         return@transaction customer
-
     }
 
     fun deleteCustomer(id: Int) = transaction {
 
-        CustomerDao[id].delete()
+        CustomerDao.findById(id)!!.delete()
 
     }
 

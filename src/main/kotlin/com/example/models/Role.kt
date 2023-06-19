@@ -1,16 +1,10 @@
 package com.example.models
 
-import kotlinx.serialization.Serializable
+import com.example.dto.customer.RoleDto
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-
-@Serializable
-data class Role(
-    val id: Int? = null,
-    val role: String
-)
 
 object Roles : IntIdTable() {
 
@@ -23,11 +17,10 @@ class RoleDao(id: EntityID<Int>) : IntEntity(id) {
 
     var role by Roles.role
 
-    override fun toString(): String {
-        return "RoleDao(role='$role')"
-    }
-
-    fun toRole() = Role(id.value, role)
+    fun toRole() = RoleDto(
+        id.value,
+        role
+    )
 
 }
 

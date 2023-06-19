@@ -5,15 +5,16 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.*
+import io.ktor.server.config.ConfigLoader.Companion.load
 
 
 fun Application.configureAuth() {
 
-
-    val jwtSecret = "secret"
-    val jwtIssuer = "http://0.0.0.0:8080/"
-    val jwtAudience = "http://0.0.0.0:8080/hello"
-    val jwtRealm = "Access to 'hello'"
+    val jwtSecret = environment.config.propertyOrNull("jwt.secret")!!.getString()
+    val jwtIssuer = environment.config.propertyOrNull("jwt.issuer")!!.getString()
+    val jwtAudience = environment.config.propertyOrNull("jwt.audience")!!.getString()
+    val jwtRealm = environment.config.propertyOrNull("jwt.realm")!!.getString()
 
     authentication {
         jwt("user"){

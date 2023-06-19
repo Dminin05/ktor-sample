@@ -1,6 +1,6 @@
 package com.example.models
 
-enum class StatusFeedback(
+enum class FeedbackStatus(
     val status: String
 ) {
 
