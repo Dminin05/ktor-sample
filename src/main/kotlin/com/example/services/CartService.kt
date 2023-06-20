@@ -50,4 +50,21 @@ class CartService : KoinComponent {
 
     }
 
+    fun clearCart(username: String) {
+
+        val ids = mutableListOf<Int>()
+        CartItemDao.all().filter { it.username == username}.forEach {
+
+            ids.add(it.id.toString().toInt())
+
+        }
+
+        ids.forEach {
+
+            CartItemDao.findById(it)!!.delete()
+
+        }
+
+    }
+
 }
