@@ -25,6 +25,7 @@ private fun Route.userConfig(){
 
     val customerService by inject<CustomerService>()
     val cartService by inject<CartService>()
+    val orderService by inject<OrderService>()
 
     authenticate("user") {
 
@@ -53,6 +54,26 @@ private fun Route.userConfig(){
             cartService.addProductInCart(CartItemDto(null, username, productId))
 
             call.respond(HttpStatusCode.NoContent)
+
+        }
+
+        post("/order") {
+
+            val username = call.getUsernameFromToken()
+            val order = orderService.createOrder(username)
+
+            call.respond(order)
+
+        }
+
+        get("/order") {
+
+            val username = call.getUsernameFromToken()
+            val orders = orderService.getOrdersByUsername(username)
+
+            println(orders)
+
+            call.respond(orders)
 
         }
 

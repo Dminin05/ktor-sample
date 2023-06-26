@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object Products : IntIdTable() {
-    val title = varchar("title", 1024)
+    val title = varchar("title", 1024).uniqueIndex()
     val price = integer("price")
 }
 
