@@ -1,4 +1,4 @@
-package com.example.services
+package com.example.services.feedback
 
 import com.example.dto.feedback.FeedbackDto
 import com.example.models.FeedbackDao
@@ -6,21 +6,25 @@ import com.example.models.FeedbackStatus
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 
-class FeedbackService : KoinComponent {
+class FeedbackService : IFeedbackService, KoinComponent {
 
-    fun getAllFeedbacks(): List<FeedbackDto> = transaction{
+    override fun getAllFeedbacks(): List<FeedbackDto> = transaction{
 
         return@transaction FeedbackDao.all().map(FeedbackDao::toFeedback)
     }
 
-    fun getFeedbacksByUsername(username: String): List<FeedbackDto> = transaction {
+    override fun getFeedbacksByUsername(
+        username: String
+    ): List<FeedbackDto> = transaction {
 
         return@transaction FeedbackDao.all()
             .filter { it.username == username }
             .map(FeedbackDao::toFeedback)
     }
 
-    fun getFeedbacksByProductId(productId: Int): List<FeedbackDto> = transaction {
+    override fun getFeedbacksByProductId(
+        productId: Int
+    ): List<FeedbackDto> = transaction {
 
         return@transaction FeedbackDao.all()
             .filter {
@@ -30,12 +34,16 @@ class FeedbackService : KoinComponent {
             .map(FeedbackDao::toFeedback)
     }
 
-    fun getFeedbackById(id: Int): FeedbackDto = transaction {
+    override fun getFeedbackById(
+        id: Int
+    ): FeedbackDto = transaction {
 
         return@transaction FeedbackDao.findById(id)!!.toFeedback()
     }
 
-    fun addFeedback(feedback: FeedbackDto) = transaction {
+    override fun addFeedback(
+        feedback: FeedbackDto
+    ): Unit = transaction {
 
         FeedbackDao.new {
             this.message = feedback.message
@@ -46,13 +54,18 @@ class FeedbackService : KoinComponent {
 
     }
 
-    fun deleteFeedback(id: Int) = transaction {
+    override fun deleteFeedback(
+        id: Int
+    ) = transaction {
 
         FeedbackDao.findById(id)!!.delete()
 
     }
 
-    fun refactorFeedback(status: FeedbackStatus, id: Int) = transaction {
+    override fun refactorFeedback(
+        status: FeedbackStatus,
+        id: Int
+    ) = transaction {
 
         FeedbackDao.findById(id)!!.status = status
 

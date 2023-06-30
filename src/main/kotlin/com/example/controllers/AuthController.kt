@@ -2,8 +2,8 @@ package com.example.controllers
 
 import com.example.dto.auth.LoginRequest
 import com.example.dto.auth.TokenDto
-import com.example.services.AuthService
-import com.example.services.CustomerService
+import com.example.services.auth.AuthService
+import com.example.services.customer.CustomerService
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
