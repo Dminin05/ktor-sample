@@ -5,9 +5,14 @@ import com.example.dto.customer.RoleDto
 import com.example.dto.product.ProductDto
 import com.example.models.CustomerDao
 import com.example.services.cart.CartService
+import com.example.services.cart.ICartService
 import com.example.services.feedback.FeedbackService
 import com.example.services.category.CategoryService
+import com.example.services.category.ICategoryService
+import com.example.services.feedback.IFeedbackService
+import com.example.services.product.IProductService
 import com.example.services.product.ProductService
+import com.example.services.role.IRoleService
 import com.example.services.role.RoleService
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,11 +23,11 @@ import org.mindrot.jbcrypt.BCrypt
 
 class CustomerService : ICustomerService, KoinComponent {
 
-    val cartService by inject<CartService>()
-    val roleService by inject<RoleService>()
-    val productService by inject<ProductService>()
-    val feedbackService by inject<FeedbackService>()
-    val categoryService by inject<CategoryService>()
+    val cartService by inject<ICartService>()
+    val roleService by inject<IRoleService>()
+    val productService by inject<IProductService>()
+    val feedbackService by inject<IFeedbackService>()
+    val categoryService by inject<ICategoryService>()
 
     init {
         runBlocking {

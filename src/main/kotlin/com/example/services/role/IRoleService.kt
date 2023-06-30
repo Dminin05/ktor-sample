@@ -6,7 +6,7 @@ interface IRoleService {
 
     fun addRole(
         role: RoleDto
-    ): Unit
+    )
 
     fun getRole(
         id: Int

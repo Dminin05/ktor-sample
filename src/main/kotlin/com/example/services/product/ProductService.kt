@@ -4,13 +4,14 @@ import com.example.dto.product.PageResult
 import com.example.dto.product.ProductDto
 import com.example.models.ProductDao
 import com.example.services.feedback.FeedbackService
+import com.example.services.feedback.IFeedbackService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ProductService : IProductService, KoinComponent {
 
-    val feedbackService by inject<FeedbackService>()
+    val feedbackService by inject<IFeedbackService>()
 
     override fun getAllProducts(): List<ProductDto> = transaction {
 
