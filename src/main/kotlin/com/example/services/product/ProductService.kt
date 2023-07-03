@@ -1,17 +1,19 @@
-package com.example.services
+package com.example.services.product
 
 import com.example.dto.product.PageResult
 import com.example.dto.product.ProductDto
 import com.example.models.ProductDao
+import com.example.services.feedback.FeedbackService
+import com.example.services.feedback.IFeedbackService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ProductService : KoinComponent {
+class ProductService : IProductService, KoinComponent {
 
-    val feedbackService by inject<FeedbackService>()
+    val feedbackService by inject<IFeedbackService>()
 
-    fun getAllProducts(): List<ProductDto> = transaction {
+    override fun getAllProducts(): List<ProductDto> = transaction {
 
         val list = ProductDao.all().map(ProductDao::toProduct)
         val newList = mutableListOf<ProductDto>()
@@ -25,7 +27,9 @@ class ProductService : KoinComponent {
         return@transaction newList
     }
 
-    fun getPageProducts(offset: Long): PageResult<ProductDto> = transaction {
+    override fun getPageProducts(
+        offset: Long
+    ): PageResult<ProductDto> = transaction {
 
         val limit = 2
 
@@ -35,7 +39,9 @@ class ProductService : KoinComponent {
         return@transaction page
     }
 
-    fun getProductById(id: Int): ProductDto = transaction {
+    override fun getProductById(
+        id: Int
+    ): ProductDto = transaction {
 
         val product = ProductDao.findById(id)!!.toProduct()
         val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
@@ -44,7 +50,9 @@ class ProductService : KoinComponent {
 
         return@transaction product
     }
-    fun addProduct(product: ProductDto) = transaction {
+    override fun addProduct(
+        product: ProductDto
+    ): Unit = transaction {
 
         ProductDao.new {
             this.title = product.title
@@ -52,7 +60,9 @@ class ProductService : KoinComponent {
         }
 
     }
-    fun deleteProduct(id: Int) = transaction {
+    override fun deleteProduct(
+        id: Int
+    ): Unit = transaction {
 
         ProductDao.findById(id)!!.delete()
 

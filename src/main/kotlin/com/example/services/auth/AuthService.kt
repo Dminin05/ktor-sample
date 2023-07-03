@@ -1,18 +1,22 @@
-package com.example.services
+package com.example.services.auth
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.dto.auth.PropertiesDto
+import com.example.services.customer.CustomerService
+import com.example.services.customer.ICustomerService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 import org.mindrot.jbcrypt.BCrypt
 
-class AuthService(private val properties: PropertiesDto) : KoinComponent{
+class AuthService(
+    private val properties: PropertiesDto
+) : IAuthService, KoinComponent{
 
-    val customerService by inject<CustomerService>()
+    val customerService by inject<ICustomerService>()
 
-    fun createToken(
+    override fun createToken(
         username: String,
         role: String
     ): String? {
@@ -29,7 +33,7 @@ class AuthService(private val properties: PropertiesDto) : KoinComponent{
 
     }
 
-    fun checkPassword(
+    override fun checkPassword(
         receivePassword: String,
         username: String
     ): Boolean {

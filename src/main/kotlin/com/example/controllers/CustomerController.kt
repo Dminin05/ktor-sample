@@ -3,7 +3,13 @@ package com.example.controllers
 import com.example.dto.cart.CartItemDto
 import com.example.dto.customer.CustomerDto
 import com.example.extensions.getUsernameFromToken
-import com.example.services.*
+import com.example.services.cart.CartService
+import com.example.services.cart.ICartService
+import com.example.services.customer.CustomerService
+import com.example.services.customer.ICustomerService
+import com.example.services.order.IOrderService
+import com.example.services.order.OrderService
+import com.example.services.role.RoleService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -23,9 +29,9 @@ fun Routing.configureCustomerRouting() = route("/customers"){
 
 private fun Route.userConfig(){
 
-    val customerService by inject<CustomerService>()
-    val cartService by inject<CartService>()
-    val orderService by inject<OrderService>()
+    val customerService by inject<ICustomerService>()
+    val cartService by inject<ICartService>()
+    val orderService by inject<IOrderService>()
 
     authenticate("user") {
 

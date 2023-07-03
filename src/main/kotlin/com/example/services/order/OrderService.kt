@@ -1,18 +1,23 @@
-package com.example.services
+package com.example.services.order
 
 import com.example.dto.order.OrderDto
-import com.example.dto.order.OrderItemDto
 import com.example.models.OrderItemDao
+import com.example.services.cart.CartService
+import com.example.services.cart.ICartService
+import com.example.services.customer.CustomerService
+import com.example.services.customer.ICustomerService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class OrderService : KoinComponent{
+class OrderService : IOrderService, KoinComponent{
 
-    val customerService by inject<CustomerService>()
-    val cartService by inject<CartService>()
+    val customerService by inject<ICustomerService>()
+    val cartService by inject<ICartService>()
 
-    fun createOrder(username: String): OrderDto = transaction {
+    override fun createOrder(
+        username: String
+    ): OrderDto = transaction {
 
         val orderId: Int
 
@@ -54,7 +59,9 @@ class OrderService : KoinComponent{
         return@transaction orderDto
     }
 
-    fun getOrdersByUsername(username: String): MutableList<OrderDto> = transaction {
+    override fun getOrdersByUsername(
+        username: String
+    ): MutableList<OrderDto> = transaction {
 
         val orders = mutableListOf<OrderDto>()
         val orderItems = OrderItemDao.all().filter { it.username == username }.map(OrderItemDao::toOrderItem)

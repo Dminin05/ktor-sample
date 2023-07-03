@@ -1,9 +1,19 @@
-package com.example.services
+package com.example.services.customer
 
 import com.example.dto.customer.CustomerDto
 import com.example.dto.customer.RoleDto
 import com.example.dto.product.ProductDto
 import com.example.models.CustomerDao
+import com.example.services.product.ProductService
+import com.example.services.role.RoleService
+import com.example.services.cart.CartService
+import com.example.services.cart.ICartService
+import com.example.services.category.CategoryService
+import com.example.services.category.ICategoryService
+import com.example.services.feedback.FeedbackService
+import com.example.services.feedback.IFeedbackService
+import com.example.services.product.IProductService
+import com.example.services.role.IRoleService
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
@@ -11,13 +21,13 @@ import org.koin.core.component.inject
 import org.mindrot.jbcrypt.BCrypt
 
 
-class CustomerService : KoinComponent {
+class CustomerService : ICustomerService, KoinComponent {
 
-    val cartService by inject<CartService>()
-    val roleService by inject<RoleService>()
-    val productService by inject<ProductService>()
-    val feedbackService by inject<FeedbackService>()
-    val categoryService by inject<CategoryService>()
+    val cartService by inject<ICartService>()
+    val roleService by inject<IRoleService>()
+    val productService by inject<IProductService>()
+    val feedbackService by inject<IFeedbackService>()
+    val categoryService by inject<ICategoryService>()
 
     init {
         runBlocking {
@@ -33,7 +43,7 @@ class CustomerService : KoinComponent {
 
 
 
-    fun getAllCustomers(): MutableList<CustomerDto> = transaction {
+    override fun getAllCustomers(): MutableList<CustomerDto> = transaction {
 
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
         val newList = mutableListOf<CustomerDto>()
@@ -48,7 +58,10 @@ class CustomerService : KoinComponent {
         return@transaction newList
     }
 
-    fun getCustomerById(id: Int): CustomerDto = transaction {
+    override fun getCustomerById(
+        id: Int
+    ): CustomerDto = transaction {
+
         val customer = CustomerDao.findById(id)!!.toCustomer()
         val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
 
@@ -58,7 +71,9 @@ class CustomerService : KoinComponent {
     }
 
 
-    fun getCustomerByUsername(username: String): CustomerDto = transaction {
+    override fun getCustomerByUsername(
+        username: String
+    ): CustomerDto = transaction {
 
         val customer = CustomerDao.all()
             .first { it.username == username }
@@ -72,7 +87,9 @@ class CustomerService : KoinComponent {
         return@transaction customer
     }
 
-    fun addCustomer(customer: CustomerDto): CustomerDto? = transaction {
+    override fun addCustomer(
+        customer: CustomerDto
+    ): CustomerDto? = transaction {
 
         val password = BCrypt.hashpw(customer.password, BCrypt.gensalt())
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
@@ -96,7 +113,9 @@ class CustomerService : KoinComponent {
         return@transaction customer
     }
 
-    fun deleteCustomer(id: Int) = transaction {
+    override fun deleteCustomer(
+        id: Int
+    ): Unit = transaction {
 
         CustomerDao.findById(id)!!.delete()
 
