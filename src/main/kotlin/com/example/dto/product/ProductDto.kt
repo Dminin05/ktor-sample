@@ -8,5 +8,6 @@ data class ProductDto(
     val id: Int? = null,
     val title: String,
     var price: Int,
-    var feedbacks: MutableList<FeedbackDto> = mutableListOf()
+    var feedbacks: MutableList<FeedbackDto> = mutableListOf(),
+    val categoryTitle: String?
 )

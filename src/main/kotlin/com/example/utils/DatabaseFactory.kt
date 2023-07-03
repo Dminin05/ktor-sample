@@ -13,7 +13,7 @@ object DatabaseFactory {
         val database = Database.connect(jdbcURL, driverClassName)
 
         transaction(database) {
-            SchemaUtils.create(Roles, Customers, CartItems, Products, Feedbacks, OrderItems)
+            SchemaUtils.create(Roles, Customers, CartItems, Products, Feedbacks, OrderItems, Categories)
         }
 
     }
