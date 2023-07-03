@@ -17,6 +17,7 @@ class CustomerService : KoinComponent {
     val roleService by inject<RoleService>()
     val productService by inject<ProductService>()
     val feedbackService by inject<FeedbackService>()
+    val categoryService by inject<CategoryService>()
 
     init {
         runBlocking {
@@ -24,7 +25,9 @@ class CustomerService : KoinComponent {
             roleService.addRole(RoleDto(null, "ADMIN"))
             addCustomer(CustomerDto(null, "dima", "minin", "user","user", "USER"))
             addCustomer(CustomerDto(null, "anton", "verevkin", "admin", "admin", "ADMIN"))
-            productService.addProduct(ProductDto(null,"apple", 222))
+            categoryService.addCategory("food")
+            productService.addProduct(ProductDto(null,"apple", 222, mutableListOf(), "food"))
+            productService.addProduct(ProductDto(null,"orange", 1888, mutableListOf(), "food"))
         }
     }
 
