@@ -1,37 +1,51 @@
 package com.example.plugins
 
-import com.example.services.*
+import com.example.services.auth.AuthService
+import com.example.services.cart.CartService
+import com.example.services.cart.ICartService
+import com.example.services.category.CategoryService
+import com.example.services.category.ICategoryService
+import com.example.services.customer.CustomerService
+import com.example.services.customer.ICustomerService
+import com.example.services.feedback.FeedbackService
+import com.example.services.feedback.IFeedbackService
+import com.example.services.order.IOrderService
+import com.example.services.order.OrderService
+import com.example.services.product.IProductService
+import com.example.services.product.ProductService
+import com.example.services.role.IRoleService
+import com.example.services.role.RoleService
 import com.example.utils.properties
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 
 val customerModule = module{
-    single(createdAtStart = true) { CustomerService() }
+    single<ICustomerService>(createdAtStart = true) { CustomerService() }
 }
 
 val productModule = module{
-    single { ProductService() }
+    single<IProductService> { ProductService() }
 }
 
 val cartModule = module{
-    single { CartService() }
+    single<ICartService> { CartService() }
 }
 
 val roleModule = module{
-    single { RoleService() }
+    single<IRoleService> { RoleService() }
 }
 
 val feedbackModule = module{
-    single { FeedbackService() }
+    single<IFeedbackService> { FeedbackService() }
 }
 
 val orderModule = module{
-    single { OrderService() }
+    single<IOrderService> { OrderService() }
 }
 
 val categoryModule = module{
-    single<CategoryService> { CategoryService() }
+    single<ICategoryService> { CategoryService() }
 }
 
 fun Application.configureKoin() = install(Koin) {

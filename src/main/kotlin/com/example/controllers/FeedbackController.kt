@@ -4,7 +4,8 @@ import com.example.dto.feedback.FeedbackDto
 import com.example.dto.feedback.ReceiveFeedback
 import com.example.extensions.getUsernameFromToken
 import com.example.models.FeedbackStatus
-import com.example.services.FeedbackService
+import com.example.services.feedback.FeedbackService
+import com.example.services.feedback.IFeedbackService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -23,7 +24,7 @@ fun Routing.configureFeedbackRouting() = route("/feedback") {
 
 private fun Route.userConfig() {
 
-    val feedbackService by inject<FeedbackService>()
+    val feedbackService by inject<IFeedbackService>()
 
     authenticate("user") {
 

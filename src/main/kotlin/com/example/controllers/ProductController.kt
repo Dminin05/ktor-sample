@@ -1,8 +1,10 @@
 package com.example.controllers
 
 import com.example.dto.product.ProductDto
-import com.example.services.CategoryService
-import com.example.services.ProductService
+import com.example.services.category.CategoryService
+import com.example.services.category.ICategoryService
+import com.example.services.product.IProductService
+import com.example.services.product.ProductService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -19,8 +21,8 @@ fun Routing.configureProductRouting()  = route("/products") {
 
 private fun Route.config(){
 
-    val productService by inject<ProductService>()
-    val categoryService by inject<CategoryService>()
+    val productService by inject<IProductService>()
+    val categoryService by inject<ICategoryService>()
 
     get{
 
