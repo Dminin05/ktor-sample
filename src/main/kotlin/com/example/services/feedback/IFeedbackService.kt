@@ -1,26 +1,25 @@
 package com.example.services.feedback
 
-import com.example.dto.feedback.FeedbackDto
-import com.example.models.FeedbackStatus
+import com.example.models.Feedback
 
 interface IFeedbackService {
 
-    fun getAllFeedbacks(): List<FeedbackDto>
+    fun getAllFeedbacks(): List<Feedback>
 
     fun getFeedbacksByUsername(
         username: String
-    ): List<FeedbackDto>
+    ): List<Feedback>
 
     fun getFeedbacksByProductId(
         productId: Int
-    ): List<FeedbackDto>
+    ): List<Feedback>
 
     fun getFeedbackById(
         id: Int
-    ): FeedbackDto
+    ): Feedback
 
     fun addFeedback(
-        feedback: FeedbackDto
+        feedback: Feedback
     ): Unit
 
     fun deleteFeedback(
@@ -28,7 +27,7 @@ interface IFeedbackService {
     ): Unit
 
     fun refactorFeedback(
-        status: FeedbackStatus,
+        status: Feedback.FeedbackStatus,
         id: Int
     ): Unit
 

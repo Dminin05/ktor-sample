@@ -1,16 +1,8 @@
 package com.example.services.customer
 
-import com.example.dto.customer.CustomerDto
-import com.example.dto.customer.RoleDto
-import com.example.dto.product.ProductDto
-import com.example.models.CustomerDao
-import com.example.services.product.ProductService
-import com.example.services.role.RoleService
-import com.example.services.cart.CartService
+import com.example.models.*
 import com.example.services.cart.ICartService
-import com.example.services.category.CategoryService
 import com.example.services.category.ICategoryService
-import com.example.services.feedback.FeedbackService
 import com.example.services.feedback.IFeedbackService
 import com.example.services.product.IProductService
 import com.example.services.role.IRoleService
@@ -31,22 +23,22 @@ class CustomerService : ICustomerService, KoinComponent {
 
     init {
         runBlocking {
-            roleService.addRole(RoleDto(null, "USER"))
-            roleService.addRole(RoleDto(null, "ADMIN"))
-            addCustomer(CustomerDto(null, "dima", "minin", "user","user", "USER"))
-            addCustomer(CustomerDto(null, "anton", "verevkin", "admin", "admin", "ADMIN"))
+            roleService.addRole(Role(null, "USER"))
+            roleService.addRole(Role(null, "ADMIN"))
+            addCustomer(Customer(null, "dima", "minin", "user","user", "USER"))
+            addCustomer(Customer(null, "anton", "verevkin", "admin", "admin", "ADMIN"))
             categoryService.addCategory("food")
-            productService.addProduct(ProductDto(null,"apple", 222, mutableListOf(), "food"))
-            productService.addProduct(ProductDto(null,"orange", 1888, mutableListOf(), "food"))
+            productService.addProduct(Product(null,"apple", 222, mutableListOf(), "food"))
+            productService.addProduct(Product(null,"orange", 1888, mutableListOf(), "food"))
         }
     }
 
 
 
-    override fun getAllCustomers(): MutableList<CustomerDto> = transaction {
+    override fun getAllCustomers(): MutableList<Customer> = transaction {
 
         val list = CustomerDao.all().map(CustomerDao::toCustomer)
-        val newList = mutableListOf<CustomerDto>()
+        val newList = mutableListOf<Customer>()
 
         list.forEach {
             val feedbacks = feedbackService.getFeedbacksByUsername(it.username).toMutableList()
@@ -60,7 +52,7 @@ class CustomerService : ICustomerService, KoinComponent {
 
     override fun getCustomerById(
         id: Int
-    ): CustomerDto = transaction {
+    ): Customer = transaction {
 
         val customer = CustomerDao.findById(id)!!.toCustomer()
         val feedbacks = feedbackService.getFeedbacksByUsername(customer.username).toMutableList()
@@ -73,7 +65,7 @@ class CustomerService : ICustomerService, KoinComponent {
 
     override fun getCustomerByUsername(
         username: String
-    ): CustomerDto = transaction {
+    ): Customer = transaction {
 
         val customer = CustomerDao.all()
             .first { it.username == username }
@@ -88,8 +80,8 @@ class CustomerService : ICustomerService, KoinComponent {
     }
 
     override fun addCustomer(
-        customer: CustomerDto
-    ): CustomerDto? = transaction {
+        customer: Customer
+    ): Customer? = transaction {
 
         val password = BCrypt.hashpw(customer.password, BCrypt.gensalt())
         val list = CustomerDao.all().map(CustomerDao::toCustomer)

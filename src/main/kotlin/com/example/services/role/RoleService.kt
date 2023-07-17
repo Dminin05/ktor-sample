@@ -1,6 +1,6 @@
 package com.example.services.role
 
-import com.example.dto.customer.RoleDto
+import com.example.models.Role
 import com.example.models.RoleDao
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
@@ -8,7 +8,7 @@ import org.koin.core.component.KoinComponent
 class RoleService : IRoleService, KoinComponent {
 
     override fun addRole(
-        role: RoleDto
+        role: Role
     ): Unit = transaction {
 
         RoleDao.new {
@@ -19,12 +19,12 @@ class RoleService : IRoleService, KoinComponent {
 
     override fun getRole(
         id: Int
-    ): RoleDto = transaction {
+    ): Role = transaction {
 
         return@transaction RoleDao.findById(id)!!.toRole()
     }
 
-    override fun getAllRoles(): List<RoleDto> = transaction {
+    override fun getAllRoles(): List<Role> = transaction {
 
         return@transaction RoleDao.all().map(RoleDao::toRole)
     }

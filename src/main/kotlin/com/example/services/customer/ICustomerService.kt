@@ -1,22 +1,22 @@
 package com.example.services.customer
 
-import com.example.dto.customer.CustomerDto
+import com.example.models.Customer
 
 interface ICustomerService {
 
-    fun getAllCustomers(): MutableList<CustomerDto>
+    fun getAllCustomers(): MutableList<Customer>
 
     fun getCustomerById(
         id: Int
-    ): CustomerDto
+    ): Customer
 
     fun getCustomerByUsername(
         username: String
-    ): CustomerDto
+    ): Customer
 
     fun addCustomer(
-        customer: CustomerDto
-    ): CustomerDto?
+        customer: Customer
+    ): Customer?
 
     fun deleteCustomer(
         id: Int

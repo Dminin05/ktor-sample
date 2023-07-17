@@ -1,9 +1,8 @@
 package com.example.controllers
 
-import com.example.dto.feedback.FeedbackDto
 import com.example.dto.feedback.ReceiveFeedback
 import com.example.extensions.getUsernameFromToken
-import com.example.models.FeedbackStatus
+import com.example.models.Feedback
 import com.example.services.feedback.FeedbackService
 import com.example.services.feedback.IFeedbackService
 import io.ktor.http.*
@@ -33,7 +32,7 @@ private fun Route.userConfig() {
             val message = call.receive<ReceiveFeedback>().message
             val productId = call.parameters.getOrFail<Int>("productId")
             val username = call.getUsernameFromToken()
-            val feedback = FeedbackDto(null, message, username, productId, FeedbackStatus.UNCHECKED)
+            val feedback = Feedback(null, message, username, productId, Feedback.FeedbackStatus.UNCHECKED)
 
             feedbackService.addFeedback(feedback)
 
@@ -47,7 +46,7 @@ private fun Route.userConfig() {
 
 private fun Route.adminConfig() {
 
-    val feedbackService by inject<FeedbackService>()
+    val feedbackService by inject<IFeedbackService>()
 
     authenticate("admin") {
 
@@ -71,14 +70,14 @@ private fun Route.adminConfig() {
 
             if (call.request.queryParameters["status"] == "accepted") {
 
-                feedbackService.refactorFeedback(FeedbackStatus.ACCEPTED, feedbackId)
+                feedbackService.refactorFeedback(Feedback.FeedbackStatus.ACCEPTED, feedbackId)
                 call.respond(HttpStatusCode.NoContent)
 
             }
 
             if (call.request.queryParameters["status"] == "rejected") {
 
-                feedbackService.refactorFeedback(FeedbackStatus.REJECTED, feedbackId)
+                feedbackService.refactorFeedback(Feedback.FeedbackStatus.REJECTED, feedbackId)
                 call.respond(HttpStatusCode.NoContent)
 
             }

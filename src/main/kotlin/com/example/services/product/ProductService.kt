@@ -1,9 +1,8 @@
 package com.example.services.product
 
 import com.example.dto.product.PageResult
-import com.example.dto.product.ProductDto
+import com.example.models.Product
 import com.example.models.ProductDao
-import com.example.services.feedback.FeedbackService
 import com.example.services.feedback.IFeedbackService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
@@ -13,10 +12,10 @@ class ProductService : IProductService, KoinComponent {
 
     val feedbackService by inject<IFeedbackService>()
 
-    override fun getAllProducts(): List<ProductDto> = transaction {
+    override fun getAllProducts(): List<Product> = transaction {
 
         val list = ProductDao.all().map(ProductDao::toProduct)
-        val newList = mutableListOf<ProductDto>()
+        val newList = mutableListOf<Product>()
 
         list.forEach{
             val feedbacks = feedbackService.getFeedbacksByProductId(it.id!!).toMutableList()
@@ -29,19 +28,19 @@ class ProductService : IProductService, KoinComponent {
 
     override fun getPageProducts(
         offset: Long
-    ): PageResult<ProductDto> = transaction {
+    ): PageResult<Product> = transaction {
 
         val limit = 2
 
         val productsList = ProductDao.all().limit(limit, offset = offset).map(ProductDao::toProduct)
-        val page = PageResult<ProductDto>(offset, limit, productsList)
+        val page = PageResult<Product>(offset, limit, productsList)
 
         return@transaction page
     }
 
     override fun getProductById(
         id: Int
-    ): ProductDto = transaction {
+    ): Product = transaction {
 
         val product = ProductDao.findById(id)!!.toProduct()
         val feedbacks = feedbackService.getFeedbacksByProductId(product.id!!).toMutableList()
@@ -51,7 +50,7 @@ class ProductService : IProductService, KoinComponent {
         return@transaction product
     }
     override fun addProduct(
-        product: ProductDto
+        product: Product
     ): Unit = transaction {
 
         ProductDao.new {

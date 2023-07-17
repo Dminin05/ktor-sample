@@ -1,9 +1,8 @@
 package com.example.services.category
 
-import com.example.dto.product.ProductDto
 import com.example.models.CategoriesDao
+import com.example.models.Product
 import com.example.services.product.IProductService
-import com.example.services.product.ProductService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -13,9 +12,9 @@ class CategoryService : ICategoryService, KoinComponent {
     val productService by inject<IProductService>()
     override fun getProductsByCategory(
         categoryTitle: String
-    ): List<ProductDto> = transaction {
+    ): List<Product> = transaction {
 
-        val productsInOneCategory = mutableListOf<ProductDto>()
+        val productsInOneCategory = mutableListOf<Product>()
 
         val products = productService.getAllProducts()
 

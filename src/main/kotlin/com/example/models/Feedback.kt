@@ -1,6 +1,6 @@
 package com.example.models
 
-import com.example.dto.feedback.FeedbackDto
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -11,7 +11,7 @@ object Feedbacks : IntIdTable() {
     val message = varchar("message", 128)
     val username = varchar("username", 128).references(Customers.username)
     val productId = integer("productId").references(Products.id)
-    val status = enumeration<FeedbackStatus>("status")
+    val status = enumeration<Feedback.FeedbackStatus>("status")
 
 }
 
@@ -24,7 +24,7 @@ class FeedbackDao(id: EntityID<Int>) : IntEntity(id) {
     var productId by Feedbacks.productId
     var status by Feedbacks.status
 
-    fun toFeedback() = FeedbackDto(
+    fun toFeedback() = Feedback(
         id.value,
         message,
         username,
@@ -33,3 +33,21 @@ class FeedbackDao(id: EntityID<Int>) : IntEntity(id) {
     )
 
 }
+
+@Serializable
+data class Feedback(
+    val id: Int? = null,
+    val message: String,
+    val username: String,
+    val productId: Int,
+    var status: FeedbackStatus
+) {
+    enum class FeedbackStatus(
+        val status: String
+    ) {
+
+        ACCEPTED("Accepted"), REJECTED("Rejected"), UNCHECKED("Unchecked")
+
+    }
+}
+

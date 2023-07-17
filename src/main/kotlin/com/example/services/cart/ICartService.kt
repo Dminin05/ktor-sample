@@ -1,7 +1,7 @@
 package com.example.services.cart
 
 import com.example.dto.cart.CartDto
-import com.example.dto.cart.CartItemDto
+import com.example.models.CartItem
 
 interface ICartService {
 
@@ -10,7 +10,7 @@ interface ICartService {
     ): CartDto
 
     fun addProductInCart(
-        cartItem: CartItemDto
+        cartItem: CartItem
     ): Unit
 
     fun deleteProductFromCart(

@@ -1,6 +1,7 @@
 package com.example.models
 
-import com.example.dto.customer.CustomerDto
+import com.example.dto.cart.CartDto
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -27,7 +28,7 @@ class CustomerDao(id: EntityID<Int>) : IntEntity(id) {
     var password by Customers.password
     var role by Customers.role
 
-    fun toCustomer() = CustomerDto(
+    fun toCustomer() = Customer(
         id.value,
         name,
         surname,
@@ -36,5 +37,16 @@ class CustomerDao(id: EntityID<Int>) : IntEntity(id) {
         role
     )
 
-
 }
+
+@Serializable
+data class Customer(
+    val id: Int? = null,
+    val name: String,
+    val surname: String,
+    val username: String,
+    val password: String,
+    val role: String,
+    var cart: CartDto = CartDto(),
+    var feedbacks: MutableList<Feedback> = mutableListOf()
+)

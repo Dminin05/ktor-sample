@@ -1,14 +1,12 @@
 package com.example.controllers
 
-import com.example.dto.cart.CartItemDto
-import com.example.dto.customer.CustomerDto
 import com.example.extensions.getUsernameFromToken
-import com.example.services.cart.CartService
+import com.example.models.CartItem
+import com.example.models.Customer
 import com.example.services.cart.ICartService
 import com.example.services.customer.CustomerService
 import com.example.services.customer.ICustomerService
 import com.example.services.order.IOrderService
-import com.example.services.order.OrderService
 import com.example.services.role.RoleService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -57,7 +55,7 @@ private fun Route.userConfig(){
             val username = call.getUsernameFromToken()
             val productId = call.parameters.getOrFail<Int>("productId")
 
-            cartService.addProductInCart(CartItemDto(null, username, productId))
+            cartService.addProductInCart(CartItem(null, username, productId))
 
             call.respond(HttpStatusCode.NoContent)
 
@@ -104,7 +102,7 @@ private fun Route.adminConfig(){
 
         post {
 
-            val customer = call.receive<CustomerDto>()
+            val customer = call.receive<Customer>()
 
             if(customerService.addCustomer(customer) == null){
 

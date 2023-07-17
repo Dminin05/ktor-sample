@@ -1,6 +1,6 @@
 package com.example.models
 
-import com.example.dto.product.ProductDto
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -19,7 +19,7 @@ class ProductDao(id: EntityID<Int>) : IntEntity(id) {
     var price by Products.price
     var categoryTitle by Products.categoryTitle
 
-    fun toProduct() = ProductDto(
+    fun toProduct() = Product(
         id.value,
         title,
         price,
@@ -28,3 +28,12 @@ class ProductDao(id: EntityID<Int>) : IntEntity(id) {
     )
 
 }
+
+@Serializable
+data class Product(
+    val id: Int? = null,
+    val title: String,
+    var price: Int,
+    var feedbacks: MutableList<Feedback> = mutableListOf(),
+    val categoryTitle: String?
+)

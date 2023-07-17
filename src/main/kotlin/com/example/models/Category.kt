@@ -1,6 +1,6 @@
 package com.example.models
 
-import com.example.dto.category.CategoryDto
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -17,8 +17,15 @@ class CategoriesDao(id: EntityID<Int>) : IntEntity(id) {
 
     var title by Categories.title
 
-    fun toSerializable() = CategoryDto(
+    fun toSerializable() = Category(
         id.value,
         title
     )
 }
+
+@Serializable
+data class Category(
+    val id: Int? = null,
+    val title: String,
+    var products: MutableList<Product> = mutableListOf()
+)

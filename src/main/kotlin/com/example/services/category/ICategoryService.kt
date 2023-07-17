@@ -1,12 +1,12 @@
 package com.example.services.category
 
-import com.example.dto.product.ProductDto
+import com.example.models.Product
 
 interface ICategoryService {
 
     fun getProductsByCategory(
         categoryTitle: String
-    ): List<ProductDto>
+    ): List<Product>
 
     fun addCategory(
         title: String

@@ -1,21 +1,20 @@
 package com.example.services.feedback
 
-import com.example.dto.feedback.FeedbackDto
+import com.example.models.Feedback
 import com.example.models.FeedbackDao
-import com.example.models.FeedbackStatus
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 
 class FeedbackService : IFeedbackService, KoinComponent {
 
-    override fun getAllFeedbacks(): List<FeedbackDto> = transaction{
+    override fun getAllFeedbacks(): List<Feedback> = transaction{
 
         return@transaction FeedbackDao.all().map(FeedbackDao::toFeedback)
     }
 
     override fun getFeedbacksByUsername(
         username: String
-    ): List<FeedbackDto> = transaction {
+    ): List<Feedback> = transaction {
 
         return@transaction FeedbackDao.all()
             .filter { it.username == username }
@@ -24,32 +23,32 @@ class FeedbackService : IFeedbackService, KoinComponent {
 
     override fun getFeedbacksByProductId(
         productId: Int
-    ): List<FeedbackDto> = transaction {
+    ): List<Feedback> = transaction {
 
         return@transaction FeedbackDao.all()
             .filter {
                 it.productId == productId &&
-                it.status == FeedbackStatus.ACCEPTED
+                it.status == Feedback.FeedbackStatus.ACCEPTED
             }
             .map(FeedbackDao::toFeedback)
     }
 
     override fun getFeedbackById(
         id: Int
-    ): FeedbackDto = transaction {
+    ): Feedback = transaction {
 
         return@transaction FeedbackDao.findById(id)!!.toFeedback()
     }
 
     override fun addFeedback(
-        feedback: FeedbackDto
+        feedback: Feedback
     ): Unit = transaction {
 
         FeedbackDao.new {
             this.message = feedback.message
             this.username = feedback.username
             this.productId = feedback.productId
-            this.status = FeedbackStatus.UNCHECKED
+            this.status = Feedback.FeedbackStatus.UNCHECKED
         }
 
     }
@@ -63,7 +62,7 @@ class FeedbackService : IFeedbackService, KoinComponent {
     }
 
     override fun refactorFeedback(
-        status: FeedbackStatus,
+        status: Feedback.FeedbackStatus,
         id: Int
     ): Unit = transaction {
 

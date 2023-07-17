@@ -1,10 +1,8 @@
 package com.example.controllers
 
-import com.example.dto.product.ProductDto
-import com.example.services.category.CategoryService
+import com.example.models.Product
 import com.example.services.category.ICategoryService
 import com.example.services.product.IProductService
-import com.example.services.product.ProductService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -66,7 +64,7 @@ private fun Route.config(){
 
     post{
 
-        val product = call.receive<ProductDto>()
+        val product = call.receive<Product>()
         productService.addProduct(product)
 
         call.respond(HttpStatusCode.NoContent)

@@ -1,13 +1,11 @@
 package com.example.services.cart
 
 import com.example.dto.cart.CartDto
-import com.example.dto.cart.CartItemDto
 import com.example.dto.product.ProductDtoForCarts
+import com.example.models.CartItem
 import com.example.models.CartItemDao
-import com.example.services.feedback.FeedbackService
 import com.example.services.feedback.IFeedbackService
 import com.example.services.product.IProductService
-import com.example.services.product.ProductService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -42,7 +40,7 @@ class CartService : ICartService, KoinComponent {
     }
 
     override fun addProductInCart(
-        cartItem: CartItemDto
+        cartItem: CartItem
     ): Unit = transaction {
 
         CartItemDao.new {

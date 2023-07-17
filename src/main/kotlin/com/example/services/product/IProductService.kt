@@ -1,22 +1,22 @@
 package com.example.services.product
 
 import com.example.dto.product.PageResult
-import com.example.dto.product.ProductDto
+import com.example.models.Product
 
 interface IProductService {
 
-    fun getAllProducts(): List<ProductDto>
+    fun getAllProducts(): List<Product>
 
     fun getPageProducts(
         offset: Long
-    ): PageResult<ProductDto>
+    ): PageResult<Product>
 
     fun getProductById(
         id: Int
-    ): ProductDto
+    ): Product
 
     fun addProduct(
-        product: ProductDto
+        product: Product
     ): Unit
 
     fun deleteProduct(

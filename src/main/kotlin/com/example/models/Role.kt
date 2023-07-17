@@ -1,6 +1,6 @@
 package com.example.models
 
-import com.example.dto.customer.RoleDto
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -17,11 +17,17 @@ class RoleDao(id: EntityID<Int>) : IntEntity(id) {
 
     var role by Roles.role
 
-    fun toRole() = RoleDto(
+    fun toRole() = Role(
         id.value,
         role
     )
 
 }
+
+@Serializable
+data class Role(
+    val id: Int? = null,
+    val role: String
+)
 
 

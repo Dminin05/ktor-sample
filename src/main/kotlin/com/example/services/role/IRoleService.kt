@@ -1,17 +1,18 @@
 package com.example.services.role
 
-import com.example.dto.customer.RoleDto
+import com.example.models.Role
+
 
 interface IRoleService {
 
-    fun getAllRoles(): List<RoleDto>
+    fun getAllRoles(): List<Role>
 
     fun addRole(
-        role: RoleDto
+        role: Role
     ): Unit
 
     fun getRole(
         id: Int
-    ): RoleDto
+    ): Role
 
 }
