@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.services.auth.AuthService
+import com.example.services.auth.IAuthService
 import com.example.services.cart.CartService
 import com.example.services.cart.ICartService
 import com.example.services.category.CategoryService
@@ -15,7 +16,6 @@ import com.example.services.product.IProductService
 import com.example.services.product.ProductService
 import com.example.services.role.IRoleService
 import com.example.services.role.RoleService
-import com.example.utils.properties
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -48,11 +48,11 @@ val categoryModule = module{
     single<ICategoryService> { CategoryService() }
 }
 
-fun Application.configureKoin() = install(Koin) {
+val authModule = module{
+    single<IAuthService> { AuthService() }
+}
 
-    val authModule = module{
-        single { AuthService(properties()) }
-    }
+fun Application.configureKoin() = install(Koin) {
 
     modules(authModule, roleModule, customerModule, productModule, cartModule, feedbackModule, orderModule, categoryModule)
 }
