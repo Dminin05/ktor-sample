@@ -2,6 +2,8 @@ package com.example.services.auth
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.example.config.AuthConfig
+import com.example.config.Config
 import com.example.dto.auth.PropertiesDto
 import com.example.services.customer.CustomerService
 import com.example.services.customer.ICustomerService
@@ -10,9 +12,10 @@ import org.koin.core.component.inject
 import java.util.*
 import org.mindrot.jbcrypt.BCrypt
 
-class AuthService(
-    private val properties: PropertiesDto
-) : IAuthService, KoinComponent{
+class AuthService() : IAuthService, KoinComponent{
+
+    private val config: AuthConfig
+        get() = Config.authConfig
 
     val customerService by inject<ICustomerService>()
 
@@ -22,12 +25,12 @@ class AuthService(
     ): String? {
 
         val token = JWT.create()
-            .withAudience(properties.jwtAudience)
-            .withIssuer(properties.jwtIssuer)
+            .withAudience(config.audience)
+            .withIssuer(config.issuer)
             .withClaim("username", username)
             .withClaim("role", role)
             .withExpiresAt(Date(System.currentTimeMillis() + 600000))
-            .sign(Algorithm.HMAC256(properties.jwtSecret))
+            .sign(Algorithm.HMAC256(config.secret))
 
         return token
 

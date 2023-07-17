@@ -2,23 +2,25 @@ package com.example.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.utils.properties
+import com.example.config.AuthConfig
+import com.example.config.Config
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
-fun Application.configureAuth() {
+private val config: AuthConfig
+    get() = Config.authConfig
 
-    val properties = properties()
+fun Application.configureAuth() {
 
     authentication {
         jwt("user"){
-            realm = properties.jwtRealm
+            realm = config.realm
             verifier(
                 JWT
-                    .require(Algorithm.HMAC256(properties.jwtSecret))
-                    .withAudience(properties.jwtAudience)
-                    .withIssuer(properties.jwtIssuer)
+                    .require(Algorithm.HMAC256(config.secret))
+                    .withAudience(config.audience)
+                    .withIssuer(config.issuer)
                     .build()
             )
             validate { credential ->
@@ -27,7 +29,7 @@ fun Application.configureAuth() {
                 val audience = payload.audience
                 val claims = payload.claims
 
-                if (properties.jwtAudience !in audience) {
+                if (config.audience !in audience) {
                     return@validate null
                 }
 
@@ -41,12 +43,12 @@ fun Application.configureAuth() {
         }
 
         jwt("admin"){
-            realm = properties.jwtRealm
+            realm = config.realm
             verifier(
                 JWT
-                    .require(Algorithm.HMAC256(properties.jwtSecret))
-                    .withAudience(properties.jwtAudience)
-                    .withIssuer(properties.jwtIssuer)
+                    .require(Algorithm.HMAC256(config.secret))
+                    .withAudience(config.audience)
+                    .withIssuer(config.issuer)
                     .build()
             )
             validate { credential ->
@@ -55,7 +57,7 @@ fun Application.configureAuth() {
                 val audience = payload.audience
                 val claims = payload.claims
 
-                if (properties.jwtAudience !in audience) {
+                if (config.audience !in audience) {
                     return@validate null
                 }
 
